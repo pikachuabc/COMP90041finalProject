@@ -1,33 +1,30 @@
 package proj.ethicalengine;
-
 import proj.EthicalEngine;
-
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 
 
 /**
- * @description: Audit
+ * @description: run given/generated scenarios by program/user and record statistic
  * @author: Fan Jia
  */
 public class Audit {
 
     private String auditType = "Unspecified";
-    int totalRuns=0;
+    int totalRuns = 0;
     private int surviveTotalAge;
     private int personSurvivor;
 
-    ArrayList<Scenario> scenarios = new ArrayList<>();
+    public ArrayList<Scenario> scenarios = new ArrayList<>();
     ArrayList<CharacteristicStatistic> characteristicStatistics = allCCharacteristic();
 
     public Audit() {
     }
 
     public Audit(Scenario[] scenariosArray) {
-        Collections.addAll(this.scenarios,scenariosArray);
+        Collections.addAll(this.scenarios, scenariosArray);
     }
 
     public String getAuditType() {
@@ -40,28 +37,60 @@ public class Audit {
 
 
     /**
-     *@author: Fan Jia
-     *@methodName: run
-     *@description: run audit using given scenarios
-     *@param: []
-     *@return: void
-     *@throw:
+     * @author: Fan Jia
+     * @methodName: run
+     * @description: run audit using given scenarios, judging by program or user
+     *               depending on EthicalEngine.interactiveMode. In interactive
+     *               mode, print statistic every 3 scenarios and ask if continue,
+     *               thus [int]totalRuns is also used for detecting if it hs been 3
+     *               scenarios, and record current scenario index in the array for
+     *               next round playing.
+     * @param: []
+     * @return: void
+     * @throw:
      */
     public void run() {
 
-        for (Scenario scenario : scenarios) {
-            EthicalEngine.Decision decision = EthicalEngine.decide(scenario);
-            recordThisScenario(scenario,decision);
+        if (EthicalEngine.interactiveMode) {        //user make choice
+            for ( int i = this.totalRuns; i < scenarios.size(); i++) {  //resume last
+                System.out.println(scenarios.get(i));
+                boolean done = false;
+                while (!done) {
+                    try {
+                        System.out.println("Who should be saved? (passenger(s) [1] or pedestrian(s) [2])");
+                        String decision = EthicalEngine.sc.nextLine();
+                        if (decision.equals("passenger") || decision.equals("passengers") || decision.equals("1")) {
+                            recordThisScenario(scenarios.get(i), EthicalEngine.Decision.PASSENGERS);
+                        } else if (decision.equals("pedestrian") || decision.equals("pedestrians") || decision.equals("2")) {
+                            recordThisScenario(scenarios.get(i), EthicalEngine.Decision.PEDESTRIANS);
+                        } else {
+                            throw new InvalidInputException();
+                        }
+                        done = true;
+                    } catch (InvalidInputException e) {
+                        System.out.print(e.getMessage());
+                    }
+                }
+                if (totalRuns !=0 && totalRuns%3==0) {          //if it has been 3 scenarios
+                    printStatistic();
+                    return;
+                }
+            }
+        } else {        //program make choice
+            for (Scenario scenario : scenarios) {
+                EthicalEngine.Decision decision = EthicalEngine.decide(scenario);
+                recordThisScenario(scenario, decision);
+            }
         }
-
     }
+
     /**
-     *@author: Fan Jia
-     *@methodName: run
-     *@description: run audit using generated scenarios.
-     *@param: [runs]
-     *@return: void
-     *@throw:
+     * @author: Fan Jia
+     * @methodName: run
+     * @description: run audit using self generated scenarios.
+     * @param: [runs]
+     * @return: void
+     * @throw:
      */
     public void run(int runs) {
 
@@ -72,23 +101,32 @@ public class Audit {
         run();
 
     }
-
+    /**
+     *@author: Fan Jia
+     *@methodName: recordThisScenario
+     *@description: for recording each scenario's each character's each characteristic in given decision
+     *@param: [scenario, decision]
+     *@return: void
+     *@throw:
+     */
     public void recordThisScenario(Scenario scenario, EthicalEngine.Decision decision) {
 
-        this.totalRuns ++;
+        this.totalRuns++;
+
         CharacteristicStatistic green = findCharacter("green");
         CharacteristicStatistic red = findCharacter("red");
-        green.setTotalCase(scenarios.size());                   //needs fix!!!!! stupid
+        green.setTotalCase(scenarios.size());                   //scenarios.size() might change
         red.setTotalCase(scenarios.size());
 
         ArrayList<Character> pedestriansList = scenario.getPedestrians();
         ArrayList<Character> passengersList = scenario.getPassengers();
 
         if (scenario.isLegalCrossing()) {
-            green.setTotalSurvive(green.getTotalSurvive()+1);
+            green.setTotalSurvive(green.getTotalSurvive() + 1);
         } else {
-            red.setTotalSurvive(red.getTotalSurvive()+1);
+            red.setTotalSurvive(red.getTotalSurvive() + 1);
         }
+
 
         if (decision.equals(EthicalEngine.Decision.PASSENGERS)) { //save passengers
             count(passengersList, true);
@@ -113,7 +151,7 @@ public class Audit {
     /**
      * @author: Fan Jia
      * @methodName: count
-     * @description: used to record statistic index for each person's each characteristic
+     * @description: used to record statistic index for each character's each characteristic
      * @param: [List, isSurvive]
      * @return: void
      * @throw:
@@ -151,7 +189,14 @@ public class Audit {
         }
     }
 
-
+    /**
+     *@author: Fan Jia
+     *@methodName: allCCharacteristic
+     *@description: this is a support function for generating all characteristic in one audit
+     *@param: []
+     *@return: java.util.ArrayList<proj.ethicalengine.CharacteristicStatistic>
+     *@throw:
+     */
     private ArrayList<CharacteristicStatistic> allCCharacteristic() {
         ArrayList<CharacteristicStatistic> characteristics = new ArrayList<>();
         //for Character
@@ -190,8 +235,9 @@ public class Audit {
         }
         characteristics.add(new CharacteristicStatistic("pets"));     //isPet
         //for scenario
-        characteristics.add(new CharacteristicStatistic("red"));
+        characteristics.add(new CharacteristicStatistic("red"));      //isLegal
         characteristics.add(new CharacteristicStatistic("green"));
+
         characteristics.add(new CharacteristicStatistic("you"));      //is you
         characteristics.add(new CharacteristicStatistic("age"));
         return characteristics;
@@ -208,6 +254,9 @@ public class Audit {
 
     @Override
     public String toString() {
+        if (this.totalRuns == 0) {
+            return "no audit available";
+        }
         String summary = "";
         summary += "======================================" + "\n";
         summary += "# " + getAuditType() + " Audit" + "\n";
@@ -219,7 +268,7 @@ public class Audit {
             }
         }
         summary += "--" + "\n";
-        summary += "average age: " + surviveTotalAge / personSurvivor+"\n";
+        summary += "average age: " + surviveTotalAge / personSurvivor + "\n";
         return summary;
     }
 
@@ -232,7 +281,7 @@ public class Audit {
 
         try {
             File myFile = new File(filepath);
-            FileOutputStream fos = new FileOutputStream(myFile,true);
+            FileOutputStream fos = new FileOutputStream(myFile, true);
             OutputStreamWriter writer = new OutputStreamWriter(fos, StandardCharsets.US_ASCII);
             writer.write(toString());
             writer.close();

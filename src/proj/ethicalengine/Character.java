@@ -8,6 +8,7 @@ public abstract class Character {
     private Gender gender;
     private BodyType bodyType;
     private int age;
+    public static final int DEFAULT_AGE=10;
 
 
     public enum Gender {

@@ -6,6 +6,7 @@ import proj.ethicalengine.Character;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
 
 /**
@@ -16,9 +17,10 @@ public class EthicalEngine {
 
     String configPath = null;
     String resultPath = null;
-
+    public static boolean interactiveMode = false;
+    public static Scanner sc = new Scanner(System.in);
     boolean collectDate = false;
-    Scenario[] scenarios = null;
+    Scenario[] scenarios = null;        //store scenarios that from config file
 
 
     public enum Decision {
@@ -35,13 +37,13 @@ public class EthicalEngine {
 
     public void mainProcess(String[] args) throws IOException {
 
-        for (int i = 0; i < args.length; i++) {
+        for (int i = 0; i < args.length; i++) {             //parse input args
             switch (args[i]) {
                 case "--config":
                 case "-c":
                     if (i != args.length - 1) {
                         configPath = args[i + 1];
-                        scenarios = readConfig();
+                        scenarios = readConfig();           //read scenarios from config file
                     } else {
                         help(args);
                     }
@@ -60,12 +62,14 @@ public class EthicalEngine {
                     break;
                 case "--interactive":
                 case "-i":
-                    interActive(configPath != null);
+                    interactiveMode = true;
                     break;
             }
         }
 
-
+        if (interactiveMode) {
+            interActive(configPath != null);
+        }
 
     }
 
@@ -75,10 +79,12 @@ public class EthicalEngine {
         FileReader fr;
         BufferedReader reader;
         ArrayList<Scenario> scenarios = new ArrayList<>();
+        ScenarioGenerator scenarioGenerator = new ScenarioGenerator();
+
         try {
             fr = new FileReader(file);
             reader = new BufferedReader(fr);
-            reader.readLine();  //caption row
+            reader.readLine();  //skip caption row
 
             int lineNumber = 0;
             ArrayList<proj.ethicalengine.Character> passenger = new ArrayList<>();
@@ -116,14 +122,6 @@ public class EthicalEngine {
                         scenario = new Scenario(legal);
                         legal = info[0].split(":")[1].contains("green");
                         if (passenger.size() != 0 && pedestrian.size() != 0) {
-                            Character[] passengerArray = new Character[passenger.size()];
-                            for (int i1 = 0; i1 < passengerArray.length; i1++) {
-                                passengerArray[i1] = passenger.get(i1);
-                            }
-                            Character[] pedestrianArray = new Character[pedestrian.size()];
-                            for (int i1 = 0; i1 < pedestrianArray.length; i1++) {
-                                pedestrianArray[i1] = pedestrian.get(i1);
-                            }
 
                             scenario.setPassengers(passenger);
                             scenario.setPedestrians(pedestrian);
@@ -136,7 +134,7 @@ public class EthicalEngine {
                         continue;
                     }
 
-                    proj.ethicalengine.Character.Gender gender;     //common characteristics
+                    proj.ethicalengine.Character.Gender gender;     //common characteristics gender & age
                     int age;
 
 
@@ -151,7 +149,8 @@ public class EthicalEngine {
                         age = Integer.parseInt(info[2]);
                     } catch (NumberFormatException e) {
                         System.out.println("WARNING: invalid number format in config file in line ");
-                        age = Person.DEFAULT_AGE;
+                        age = Character.DEFAULT_AGE;
+
                     }
 
 
@@ -231,7 +230,7 @@ public class EthicalEngine {
     }
 
     public void interActive(boolean configDate) throws IOException {
-        Scanner sc = new Scanner(System.in);
+
         File f = new File("welcome.ascii");
         FileInputStream fis = new FileInputStream(f);
         InputStreamReader isr = new InputStreamReader(fis, StandardCharsets.US_ASCII);
@@ -259,66 +258,40 @@ public class EthicalEngine {
             }
         }
 
-        while (true) {
+        Audit audit = new Audit();
+        audit.setAuditType("User");
+        ScenarioGenerator generator = new ScenarioGenerator();
 
-            if (!configDate) {
-                ScenarioGenerator generator = new ScenarioGenerator();
-                scenarios = new Scenario[3];
-                for (int i = 0; i < scenarios.length; i++) {
-                    scenarios[i] = generator.generate();
+        while (true) {
+            if (!configDate) {                     //add scenario from self-generated or config file
+                for (int i = 0; i < 3; i++) {
+                    audit.scenarios.add(generator.generate());
+                }
+            } else {
+                audit.scenarios.addAll(Arrays.asList(scenarios));
+            }
+            audit.run();                            //main process of making choice
+            done = false;                           //ask user if continue
+            while (!done) {
+                try {
+                    System.out.println("Would you like to continue? (yes/no)");
+                    String respond = sc.nextLine();
+                    if (respond.equals("no")) {
+                        if (collectDate) {
+                            audit.printToFile(resultPath);
+                        }
+                        System.exit(0);
+                    } else if (!respond.equals("yes")) {
+                        throw new InvalidInputException();
+                    }
+                    done = true;
+                } catch (InvalidInputException e) {
+                    System.out.print(e.getMessage());
                 }
             }
 
-            Audit audit = new Audit(scenarios);
-            audit.setAuditType("User");
-            int scCounter = 0;
 
-            for (Scenario scenario : scenarios) {
-                System.out.println(scenario);
-                done = false;
-                while (!done) {
-                    try {
-                        System.out.println("Who should be saved? (passenger(s) [1] or pedestrian(s) [2])");
-                        String decision = sc.nextLine();
-                        if (decision.equals("passenger") || decision.equals("passengers") || decision.equals("1")) {
-                            audit.recordThisScenario(scenario, Decision.PASSENGERS);
-                        } else if (decision.equals("pedestrian") || decision.equals("pedestrians") || decision.equals("2")) {
-                            audit.recordThisScenario(scenario, Decision.PEDESTRIANS);
-                        } else {
-                            throw new InvalidInputException();
-                        }
-                        done = true;
-                    } catch (InvalidInputException e) {
-                        System.out.print(e.getMessage());
-                    }
-                }
-                scCounter++;
-                if (scCounter == 3) {       //after 3 scenarios
-                    audit.printStatistic();
-                    if (collectDate) {
-                        audit.printToFile(resultPath);
-                    }
-                    scCounter = 0;      //reset counter
-
-                    done = false;
-                    while (!done) {
-                        try {
-                            System.out.println("Would you like to continue? (yes/no)");
-                            String respond = sc.nextLine();
-                            if (respond.equals("no")) {
-                                System.exit(0);
-                            } else if (!respond.equals("yes")) {
-                                throw new InvalidInputException();
-                            }
-                            done = true;
-                        } catch (InvalidInputException e) {
-                            System.out.print(e.getMessage());
-                        }
-                    }
-                    }
-                }
-
-            if (configDate) {
+            if (configDate) {                   //when user want to continue and no scenarios from config
                 audit.printStatistic();
                 if (collectDate) {
                     audit.printToFile(resultPath);
@@ -329,6 +302,7 @@ public class EthicalEngine {
 
             }
         }
+
     }
 
     public void help(String[] args) {

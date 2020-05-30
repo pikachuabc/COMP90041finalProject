@@ -4,10 +4,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 /**
- * @description:Scenario
+ * @description: Scenario
  * @author: Fan Jia
  */
 public class Scenario {
+
     private ArrayList<Character> passengers = new ArrayList<>();
     private ArrayList<Character> pedestrians = new ArrayList<>();
     private boolean isLegalCrossing;

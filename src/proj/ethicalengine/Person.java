@@ -8,7 +8,7 @@ public class Person extends Character {
     private boolean isPregnant;
     private Profession profession;
     private boolean isYou = false;
-    public static final int DEFAULT_AGE=10;
+
 
 
     public enum Profession {

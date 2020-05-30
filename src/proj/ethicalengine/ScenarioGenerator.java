@@ -63,6 +63,7 @@ public class ScenarioGenerator {
         this.pedestrianCountMaximum = pedestrianCountMaximum;
     }
 
+
     public Person getRandomPerson() {
         Character.Gender gender;
         boolean isPregnant;
