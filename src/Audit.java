@@ -1,5 +1,7 @@
-package proj.ethicalengine;
-import proj.EthicalEngine;
+import ethicalengine.*;
+import ethicalengine.Character;
+
+
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -17,8 +19,8 @@ public class Audit {
     private int surviveTotalAge;
     private int personSurvivor;
 
-    public ArrayList<Scenario> scenarios = new ArrayList<>();
-    ArrayList<CharacteristicStatistic> characteristicStatistics = allCCharacteristic();
+    public ArrayList<Scenario> scenarios = new ArrayList<>();   //all scenarios in this audit stored here
+    ArrayList<CharaStatistic> charaStatistics = allCCharacteristic();
 
     public Audit() {
     }
@@ -37,17 +39,18 @@ public class Audit {
 
 
     /**
-     * @author: Fan Jia
-     * @methodName: run
-     * @description: run audit using given scenarios, judging by program or user
-     *               depending on EthicalEngine.interactiveMode. In interactive
-     *               mode, print statistic every 3 scenarios and ask if continue,
-     *               thus [int]totalRuns is also used for detecting if it hs been 3
-     *               scenarios, and record current scenario index in the array for
-     *               next round playing.
-     * @param: []
-     * @return: void
-     * @throw:
+     * run audit using given scenarios(from randomly generate or config file),
+     * judging by program or user depending on EthicalEngine.interactiveMode.
+     * In interactive mode, print statistic every 3 scenarios and ask if continue,
+     * thus [int]totalRuns is also used for detecting if it hs been 3 scenarios,
+     * and record current scenario index in the array for next round playing.
+     * use {@link #recordThisScenario(Scenario, EthicalEngine.Decision)}
+     * to record statistic
+     *
+     * @author Fan Jia
+     * @methodName run
+     * @return void
+     * @see #recordThisScenario(Scenario, EthicalEngine.Decision)
      */
     public void run() {
 
@@ -81,16 +84,19 @@ public class Audit {
                 EthicalEngine.Decision decision = EthicalEngine.decide(scenario);
                 recordThisScenario(scenario, decision);
             }
+
         }
     }
 
     /**
-     * @author: Fan Jia
-     * @methodName: run
-     * @description: run audit using self generated scenarios.
-     * @param: [runs]
-     * @return: void
-     * @throw:
+     * generate {@code runs} random scenarios and run
+     *
+     * @author Fan Jia
+     * @methodName run
+     * @param runs : this audit will run {@code runs} random scenarios
+     * @return void
+     * @see Audit#run()
+     * @see ScenarioGenerator#generate()
      */
     public void run(int runs) {
 
@@ -102,24 +108,30 @@ public class Audit {
 
     }
     /**
-     *@author: Fan Jia
-     *@methodName: recordThisScenario
-     *@description: for recording each scenario's each character's each characteristic in given decision
-     *@param: [scenario, decision]
-     *@return: void
-     *@throw:
+     *  for recording each scenario's each character's each characteristic in given decision
+     *
+     * @author Fan Jia
+     * @methodName recordThisScenario
+     * @param scenario : scenario
+     * @param decision : decision made by usr or program
+     * @return void
      */
     public void recordThisScenario(Scenario scenario, EthicalEngine.Decision decision) {
 
         this.totalRuns++;
 
-        CharacteristicStatistic green = findCharacter("green");
-        CharacteristicStatistic red = findCharacter("red");
+        CharaStatistic green = CharaStatistic.findCharacter("green", charaStatistics);
+        CharaStatistic red = CharaStatistic.findCharacter("green", charaStatistics);
+        assert green != null;
         green.setTotalCase(scenarios.size());                   //scenarios.size() might change
+        assert red != null;
         red.setTotalCase(scenarios.size());
 
-        ArrayList<Character> pedestriansList = scenario.getPedestrians();
-        ArrayList<Character> passengersList = scenario.getPassengers();
+        ArrayList<ethicalengine.Character> pedestriansList = new ArrayList<>();
+        ArrayList<ethicalengine.Character> passengersList = new ArrayList<>();
+        Collections.addAll(pedestriansList, scenario.getPedestrians());
+        Collections.addAll(passengersList, scenario.getPassengers());
+
 
         if (scenario.isLegalCrossing()) {
             green.setTotalSurvive(green.getTotalSurvive() + 1);
@@ -135,7 +147,8 @@ public class Audit {
             count(pedestriansList, true);
             count(passengersList, false);
         }
-        characteristicStatistics.sort((o1, o2) -> {
+
+        charaStatistics.sort((o1, o2) -> {
             double o1Ratio = Double.parseDouble(o1.ratio());
             double o2Ratio = Double.parseDouble(o2.ratio());
             if (o1Ratio > o2Ratio) {
@@ -149,23 +162,24 @@ public class Audit {
     }
 
     /**
-     * @author: Fan Jia
-     * @methodName: count
-     * @description: used to record statistic index for each character's each characteristic
-     * @param: [List, isSurvive]
-     * @return: void
-     * @throw:
+     * this is a support function for recording statistic for each character's each characteristic
+     *
+     * @author Fan Jia
+     * @methodName count
+     * @param List : pedestrian or passenger
+     * @param isSurvive : if survive
+     * @return void
      */
-    private void count(ArrayList<Character> List, boolean isSurvive) {
-        for (Character character1 : List) {
+    private void count(ArrayList<ethicalengine.Character> List, boolean isSurvive) {
+        for (ethicalengine.Character character1 : List) {
             if (character1.getClass().equals(Person.class)) {    //count person
                 Person person = (Person) character1;
                 String[] characters = person.toString().toLowerCase().split(" ");
                 for (String character : characters) {           //for every person count their character
-                    for (CharacteristicStatistic characteristicStatistic : characteristicStatistics) {
-                        if (characteristicStatistic.getCharacteristicName().equals(character)
-                                || characteristicStatistic.getCharacteristicName().equals("person")) {
-                            characteristicStatistic.survive(isSurvive);
+                    for (CharaStatistic charaStatistic : charaStatistics) {
+                        if (charaStatistic.getCharacteristicName().equals(character)
+                                || charaStatistic.getCharacteristicName().equals("person")) {
+                            charaStatistic.survive(isSurvive);
                         }
                     }
                 }
@@ -177,10 +191,10 @@ public class Audit {
                 Animal animal = (Animal) character1;
                 String[] characters = animal.toString().toLowerCase().split(" ");
                 for (String character : characters) {
-                    for (CharacteristicStatistic characteristicStatistic : characteristicStatistics) {
-                        if (characteristicStatistic.getCharacteristicName().equals(character)
-                                || characteristicStatistic.getCharacteristicName().equals("animal")) {
-                            characteristicStatistic.survive(isSurvive);
+                    for (CharaStatistic charaStatistic : charaStatistics) {
+                        if (charaStatistic.getCharacteristicName().equals(character)
+                                || charaStatistic.getCharacteristicName().equals("animal")) {
+                            charaStatistic.survive(isSurvive);
                         }
                     }
                 }
@@ -190,68 +204,68 @@ public class Audit {
     }
 
     /**
-     *@author: Fan Jia
-     *@methodName: allCCharacteristic
-     *@description: this is a support function for generating all characteristic in one audit
-     *@param: []
-     *@return: java.util.ArrayList<proj.ethicalengine.CharacteristicStatistic>
-     *@throw:
+     * this is a support function for generating all characteristic in one audit.
+     * due to characteristic may changed (add or delete), each audit should call
+     * this function to acquire current characteristic
+     *
+     * @author Fan Jia
+     * @methodName allCCharacteristic
+     * @return java.util.ArrayList<ethicalengine.CharaStatistic>
      */
-    private ArrayList<CharacteristicStatistic> allCCharacteristic() {
-        ArrayList<CharacteristicStatistic> characteristics = new ArrayList<>();
+    private ArrayList<CharaStatistic> allCCharacteristic() {
+        ArrayList<CharaStatistic> characteristics = new ArrayList<>();
         //for Character
-        Character.Gender[] genders = Character.Gender.values();                     //gender
-        for (Character.Gender gender : genders) {
-            if (!gender.equals(Character.Gender.UNKNOWN)) {
-                characteristics.add(new CharacteristicStatistic(gender.toString().toLowerCase()));
+        ethicalengine.Character.Gender[] genders = ethicalengine.Character.Gender.values();               //gender
+        for (ethicalengine.Character.Gender gender : genders) {
+            if (!gender.equals(ethicalengine.Character.Gender.UNKNOWN)) {
+                characteristics.add(new CharaStatistic(gender.toString().toLowerCase()));
             }
         }
-        Character.BodyType[] bodyTypes = Character.BodyType.values();               //body type
+        ethicalengine.Character.BodyType[] bodyTypes = ethicalengine.Character.BodyType.values();         //body type
         for (Character.BodyType bodyType : bodyTypes) {
-            characteristics.add(new CharacteristicStatistic(bodyType.toString().toLowerCase()));
+            characteristics.add(new CharaStatistic(bodyType.toString().toLowerCase()));
         }
         //for person
-        Person.AgeCategory[] ageCategories = Person.AgeCategory.values();           //age category
+        Person.AgeCategory[] ageCategories = Person.AgeCategory.values();                                 //age category
         for (Person.AgeCategory ageCategory : ageCategories) {
-            characteristics.add(new CharacteristicStatistic(ageCategory.toString().toLowerCase()));
+            characteristics.add(new CharaStatistic(ageCategory.toString().toLowerCase()));
         }
-        Person.Profession[] professions = Person.Profession.values();               //profession
+        Person.Profession[] professions = Person.Profession.values();                                     //profession
         for (Person.Profession profession : professions) {
             if (!profession.equals(Person.Profession.UNKNOWN) && !profession.equals(Person.Profession.NONE))
-                characteristics.add(new CharacteristicStatistic(profession.toString().toLowerCase()));
+                characteristics.add(new CharaStatistic(profession.toString().toLowerCase()));
         }
-        characteristics.add(new CharacteristicStatistic("pregnant")); //pregnant
+        characteristics.add(new CharaStatistic("pregnant"));                              //pregnant
 
-        characteristics.add(new CharacteristicStatistic("person"));   //class type
-        characteristics.add(new CharacteristicStatistic("animal"));
+
         //for animal
-
-        String[] species = new String[Animal.specie.size()];                         //species
+        String[] species = new String[Animal.specie.size()];                  //species
         for (int i = 0; i < Animal.specie.size(); i++) {
             species[i] = Animal.specie.get(i);
         }
         for (String specie : species) {
-            characteristics.add(new CharacteristicStatistic(specie.toLowerCase()));
+            characteristics.add(new CharaStatistic(specie.toLowerCase()));
         }
-        characteristics.add(new CharacteristicStatistic("pets"));     //isPet
-        //for scenario
-        characteristics.add(new CharacteristicStatistic("red"));      //isLegal
-        characteristics.add(new CharacteristicStatistic("green"));
+        characteristics.add(new CharaStatistic("pets"));     //isPet
 
-        characteristics.add(new CharacteristicStatistic("you"));      //is you
-        characteristics.add(new CharacteristicStatistic("age"));
+        //for scenario
+        characteristics.add(new CharaStatistic("person"));   //class type
+        characteristics.add(new CharaStatistic("animal"));
+        characteristics.add(new CharaStatistic("red"));      //isLegal
+        characteristics.add(new CharaStatistic("green"));
+        characteristics.add(new CharaStatistic("you"));      //is you
+        characteristics.add(new CharaStatistic("age"));      //age
         return characteristics;
     }
 
-    private CharacteristicStatistic findCharacter(String name) {
-        for (CharacteristicStatistic characteristicStatistic : characteristicStatistics) {
-            if (characteristicStatistic.getCharacteristicName().equals(name)) {
-                return characteristicStatistic;
-            }
-        }
-        return null;
-    }
 
+    /**
+     * format output
+     *
+     * @author Fan Jia
+     * @methodName toString
+     * @return java.lang.String
+     */
     @Override
     public String toString() {
         if (this.totalRuns == 0) {
@@ -262,9 +276,9 @@ public class Audit {
         summary += "# " + getAuditType() + " Audit" + "\n";
         summary += "======================================" + "\n";
         summary += "- % SAVED AFTER " + this.totalRuns + " RUNS" + "\n";
-        for (CharacteristicStatistic characteristicStatistic : characteristicStatistics) {
-            if (characteristicStatistic.getTotalCase() != 0) {
-                summary += characteristicStatistic.toString();
+        for (CharaStatistic charaStatistic : charaStatistics) {
+            if (charaStatistic.getTotalCase() != 0) {
+                summary += charaStatistic.toString();
             }
         }
         summary += "--" + "\n";
@@ -272,12 +286,28 @@ public class Audit {
         return summary;
     }
 
+    /**
+     * command line output
+     *
+     * @author Fan Jia
+     * @methodName printStatistic
+     * @return void
+     * @see #toString()
+     */
     public void printStatistic() {
         System.out.println(toString());
         System.out.println();
     }
 
-    public void printToFile(String filepath) throws IOException {
+    /**
+     * print statistic to file
+     *
+     * @author Fan Jia
+     * @methodName printToFile
+     * @param filepath : path to save the log file
+     * @return void
+     */
+    public void printToFile(String filepath) {
 
         try {
             File myFile = new File(filepath);

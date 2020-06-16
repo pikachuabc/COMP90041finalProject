@@ -1,4 +1,4 @@
-package proj.ethicalengine;
+package ethicalengine;
 
 /**
  * @description: handle invalid characteristic input

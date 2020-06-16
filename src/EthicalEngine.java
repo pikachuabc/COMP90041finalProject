@@ -1,7 +1,5 @@
-package proj;
-
-import proj.ethicalengine.*;
-import proj.ethicalengine.Character;
+import ethicalengine.*;
+import ethicalengine.Character;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -29,12 +27,23 @@ public class EthicalEngine {
     }
 
     public static void main(String[] args) throws IOException {
+
         EthicalEngine ethicalEngine = new EthicalEngine();
         ethicalEngine.mainProcess(args);
 
 
     }
 
+
+    /**
+     * Initiate whole process depending on user input parameters
+     *
+     * @param args : system input
+     * @return void
+     * @throws IOException when something goes wrong while reading file
+     * @author Fan Jia
+     * @methodName mainProcess
+     */
     public void mainProcess(String[] args) throws IOException {
 
         for (int i = 0; i < args.length; i++) {             //parse input args
@@ -73,11 +82,20 @@ public class EthicalEngine {
 
     }
 
-
+    /**
+     * Read scenarios data from .csv file and store in field {@link EthicalEngine#scenarios}
+     *
+     * @return ethicalengine.Scenario[]
+     * @author Fan Jia
+     * @methodName readConfig
+     * @see ScenarioGenerator#generate(ArrayList, boolean, int)
+     */
     public Scenario[] readConfig() {
         File file = new File(configPath);
         FileReader fr;
         BufferedReader reader;
+
+
         ArrayList<Scenario> scenarios = new ArrayList<>();
         ScenarioGenerator scenarioGenerator = new ScenarioGenerator();
 
@@ -86,128 +104,26 @@ public class EthicalEngine {
             reader = new BufferedReader(fr);
             reader.readLine();  //skip caption row
 
-            int lineNumber = 0;
-            ArrayList<proj.ethicalengine.Character> passenger = new ArrayList<>();
-            ArrayList<proj.ethicalengine.Character> pedestrian = new ArrayList<>();
-            Scenario scenario;
-            String line;
+            int lineNumber = 1;
+            String line = reader.readLine();
 
-            boolean legal = true;
-            boolean done = false;
 
-            while (!done) {
-                if ((line = reader.readLine()) == null) {   //end reading
-                    done = true;
-                    Character[] passengerArray = new Character[passenger.size()];
-                    for (int i1 = 0; i1 < passengerArray.length; i1++) {
-                        passengerArray[i1] = passenger.get(i1);
+            while (line != null) {
+
+                String[] info = line.split(",", -1);
+                if (info[0].contains("scenario:")) {
+                    ArrayList<String[]> scenarioInfo = new ArrayList<>();        //each character's information in this scenario
+                    boolean isLegal = info[0].split(":")[1].contains("green");
+
+                    while ((line = reader.readLine()) != null &&
+                            !line.split(",", -1)[0].contains("scenario:")) {
+                        info = line.split(",", -1);
+                        scenarioInfo.add(info);
+                        lineNumber++;
                     }
-                    Character[] pedestrianArray = new Character[pedestrian.size()];
-                    for (int i1 = 0; i1 < pedestrianArray.length; i1++) {
-                        pedestrianArray[i1] = pedestrian.get(i1);
-                    }
-                    scenario = new Scenario(passengerArray, pedestrianArray, legal);
+
+                    Scenario scenario = scenarioGenerator.generate(scenarioInfo, isLegal, lineNumber);
                     scenarios.add(scenario);
-                    continue;
-                }
-
-                lineNumber++;
-                try {
-                    String[] info = line.split(",", -1);
-                    if (info.length != 10) {
-                        throw new InvalidDataFormatException(lineNumber);  //skip this line and throw warning
-                    }
-
-                    if (info[0].contains("scenario:")) {                //a new scenario
-                        scenario = new Scenario(legal);
-                        legal = info[0].split(":")[1].contains("green");
-                        if (passenger.size() != 0 && pedestrian.size() != 0) {
-
-                            scenario.setPassengers(passenger);
-                            scenario.setPedestrians(pedestrian);
-
-                            scenarios.add(scenario);
-
-                            passenger = new ArrayList<>();      //reset
-                            pedestrian = new ArrayList<>();
-                        }
-                        continue;
-                    }
-
-                    proj.ethicalengine.Character.Gender gender;     //common characteristics gender & age
-                    int age;
-
-
-                    try {
-                        gender = proj.ethicalengine.Character.Gender.contains(info[1]);
-                    } catch (InvalidCharacteristicException e) {
-                        System.out.println(e.getMessage() + lineNumber);
-                        gender = proj.ethicalengine.Character.Gender.UNKNOWN;
-                    }
-
-                    try {
-                        age = Integer.parseInt(info[2]);
-                    } catch (NumberFormatException e) {
-                        System.out.println("WARNING: invalid number format in config file in line ");
-                        age = Character.DEFAULT_AGE;
-
-                    }
-
-
-                    if (info[0].equals("person")) {     //person
-
-                        Person.Profession profession;
-                        boolean pregnant;
-                        boolean isYou;
-                        proj.ethicalengine.Character.BodyType bodyType;
-
-                        try {
-                            bodyType = proj.ethicalengine.Character.BodyType.contains(info[3]);
-                        } catch (InvalidCharacteristicException e) {
-                            System.out.println(e.getMessage() + lineNumber);
-                            bodyType = proj.ethicalengine.Character.BodyType.UNSPECIFIED;
-                        }
-
-                        if (info[4].equals("")) {
-                            profession = Person.Profession.NONE;
-                        } else {
-                            try {
-                                profession = Person.Profession.contains(info[4]);
-                            } catch (InvalidCharacteristicException e) {
-                                System.out.println(e.getMessage() + lineNumber);
-                                profession = Person.Profession.UNKNOWN;
-                            }
-                        }
-                        pregnant = info[5].equals("yes") || info[5].equals("true");
-                        isYou = info[5].equals("yes") || info[5].equals("true");
-                        Person person = new Person(gender, bodyType, age, pregnant, profession);
-                        if (isYou) {
-                            person.setAsYou(true);
-                        }
-                        if (info[9].equals("passenger")) {      //as passenger
-                            passenger.add(person);
-                        } else {
-                            pedestrian.add(person);
-                        }
-                    } else {        //animal
-                        String specie = info[7];
-                        boolean isPet;
-                        if (!Animal.specie.contains(info[7])) {
-                            Animal.specie.add(info[7]);     //add new specie, assume also an animal name
-                        }
-                        isPet = info[8].equals("yes") || info[8].equals("true");
-                        Animal animal = new Animal(specie);
-                        if (isPet) {
-                            animal.setPet(true);
-                        }
-                        if (info[9].equals("passenger")) {      //as passenger
-                            passenger.add(animal);
-                        } else {
-                            pedestrian.add(animal);
-                        }
-                    }
-                } catch (InvalidDataFormatException e) {
-                    System.out.println(e.getMessage() + lineNumber);
                 }
             }
 
@@ -220,15 +136,17 @@ public class EthicalEngine {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-
-        Scenario[] scenariosArray = new Scenario[scenarios.size()];
-        for (int i1 = 0; i1 < scenarios.size(); i1++) {
-            scenariosArray[i1] = scenarios.get(i1);
-        }
-        return scenariosArray;
+        return scenarios.toArray(new Scenario[0]);
     }
 
+
+    /**
+     * @param configDate : decide if the program should generate scenarios for user
+     * @return void
+     * @throws IOException
+     * @author Fan Jia
+     * @methodName interActive
+     */
     public void interActive(boolean configDate) throws IOException {
 
         File f = new File("welcome.ascii");
@@ -305,6 +223,14 @@ public class EthicalEngine {
 
     }
 
+    /**
+     * help info
+     *
+     * @author Fan Jia
+     * @methodName help
+     * @param args :
+     * @return void
+     */
     public void help(String[] args) {
         String help = "Usage: java EthicalEngine";
         for (String arg : args) {
@@ -318,9 +244,41 @@ public class EthicalEngine {
         System.out.println(help);
         System.exit(0);
     }
-
+    /**
+     * let program decide which group to save depending on sum mark of each
+     * group, for marking detail see {@link Character#getMark()}
+     *
+     * @author Fan Jia
+     * @methodName decide
+     * @param scenario : make decision for this scenario
+     * @return EthicalEngine.Decision
+     * @see Character#getMark()
+     */
     public static Decision decide(Scenario scenario) {
-        return Decision.PASSENGERS;
+        double passengerMark=0;
+        double pedestrianMark=0;
+        Character[] passengers = scenario.getPassengers();
+        Character[] pedestrians = scenario.getPedestrians();
+
+        for (Character passenger : passengers) {
+            passengerMark += passenger.getMark();
+        }
+        for (Character pedestrian : pedestrians) {
+            pedestrianMark += pedestrian.getMark();
+        }
+
+
+        if (scenario.isLegalCrossing()) {
+            pedestrianMark += 5;
+        } else {
+            passengerMark+= 5;
+        }
+
+
+        if (passengerMark >= pedestrianMark) {
+            return Decision.PASSENGERS;
+        }
+        return Decision.PEDESTRIANS;
     }
 
 

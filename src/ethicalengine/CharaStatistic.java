@@ -1,16 +1,18 @@
-package proj.ethicalengine;
+package ethicalengine;
+
+import java.util.ArrayList;
 
 /**
  * @description:each characterstic
  * @author: Fan Jia
  */
-public class CharacteristicStatistic {
+public class CharaStatistic {
 
     private String characteristicName;
     private int totalCase=0;
     private int totalSurvive=0;
 
-    public CharacteristicStatistic(String characteristicName) {
+    public CharaStatistic(String characteristicName) {
         this.characteristicName = characteristicName;
     }
 
@@ -37,13 +39,37 @@ public class CharacteristicStatistic {
     public void setTotalSurvive(int totalSurvive) {
         this.totalSurvive = totalSurvive;
     }
+    /**
+     * support function for finding a specific characteristic in a list
+     *
+     * @author Fan Jia
+     * @methodName findCharacter
+     * @param name :
+     * @param charaStatistics :
+     * @return ethicalengine.CharaStatistic
+     */
+    public static CharaStatistic findCharacter(String name,
+                                               ArrayList<CharaStatistic> charaStatistics) {
+        for (CharaStatistic charaStatistic : charaStatistics) {
+            if (charaStatistic.getCharacteristicName().equals(name)) {
+                return charaStatistic;
+            }
+        }
+        return null;
+    }
 
+    /**
+     * record statistic under different situation
+     *
+     * @author Fan Jia
+     * @methodName survive
+     * @param isSurvive : if survive
+     * @return void
+     */
     public void survive(boolean isSurvive) {
+        this.totalCase++;
         if (isSurvive) {
-            this.totalCase++;
             this.totalSurvive++;
-        } else {
-            this.totalCase++;
         }
 
     }

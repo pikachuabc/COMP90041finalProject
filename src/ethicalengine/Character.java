@@ -1,4 +1,4 @@
-package proj.ethicalengine;
+package ethicalengine;
 
 /**
  * @description: Character
@@ -11,10 +11,22 @@ public abstract class Character {
     public static final int DEFAULT_AGE=10;
 
 
+
     public enum Gender {
-        MALE,
-        FEMALE,
-        UNKNOWN;
+        MALE(1),
+        FEMALE(1),
+        UNKNOWN(1);
+
+        private final double coefficient;
+
+        Gender(double coefficient) {
+            this.coefficient = coefficient;
+        }
+
+        public double getCoefficient() {
+            return coefficient;
+        }
+
         public static Gender contains(String type) throws InvalidCharacteristicException {
             for (Gender gender : Gender.values()) {
                 if (gender.name().equals(type.toUpperCase())) {
@@ -26,10 +38,20 @@ public abstract class Character {
     }
 
     public enum BodyType {
-        AVERAGE,
-        ATHLETIC,
-        OVERWEIGHT,
-        UNSPECIFIED;
+        AVERAGE(1),
+        ATHLETIC(1),
+        OVERWEIGHT(1),
+        UNSPECIFIED(1);
+
+        private final double coefficient;
+
+        BodyType(double coefficient) {
+            this.coefficient = coefficient;
+        }
+
+        public double getCoefficient() {
+            return coefficient;
+        }
         public static BodyType contains(String type) throws InvalidCharacteristicException {
             for (BodyType bodyType : BodyType.values()) {
                 if (bodyType.name().equals(type.toUpperCase())) {
@@ -43,7 +65,7 @@ public abstract class Character {
     public Character() {
         this.gender = Gender.UNKNOWN;
         this.bodyType = BodyType.UNSPECIFIED;
-        this.age = 1;
+        this.age = DEFAULT_AGE;
     }
 
     public Character(Character c) {
@@ -78,8 +100,27 @@ public abstract class Character {
         return age;
     }
 
-    public void setAge(int age) {
+    public void setAge(int age){
+        if (age <= 0) {
+            System.out.println("invalid age value, check it");
+            return;
+        }
         this.age = age;
+    }
+
+    /**
+     * each character has a basic mark depending on their body type and gender,
+     * for specific categories, person and animal have their additional mark
+     *
+     * @author Fan Jia
+     * @methodName getMark
+     * @return double
+     * @see Person#getMark()
+     * @see Animal#getMark()
+     */
+    public double getMark() {
+        return  getGender().getCoefficient()+
+                getBodyType().getCoefficient();
     }
 
 
