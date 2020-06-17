@@ -1,4 +1,4 @@
-package proj.ethicalengine;
+package ethicalengine;
 
 /**
  * @description:Person
@@ -8,19 +8,26 @@ public class Person extends Character {
     private boolean isPregnant;
     private Profession profession;
     private boolean isYou = false;
-    public static final int DEFAULT_AGE=10;
-
 
     public enum Profession {
-        DOCTOR,
-        CEO,
-        CRIMINAL,
-        HOMELESS,
-        UNEMPLOYED,
-        UNKNOWN,
-        PROGRAMMER,
-        TEACHER,
-        NONE;
+        DOCTOR(1),
+        CEO(1),
+        CRIMINAL(1),
+        HOMELESS(1),
+        UNEMPLOYED(1),
+        UNKNOWN(1),
+        PROGRAMMER(1),
+        TEACHER(1),
+        NONE(1);
+        private final double coefficient;
+
+        Profession(double coefficient) {
+            this.coefficient = coefficient;
+        }
+
+        public double getCoefficient() {
+            return coefficient;
+        }
         public static Profession contains(String type) throws InvalidCharacteristicException {
             for (Profession profession : Profession.values()) {
                 if (profession.name().equals(type.toUpperCase())) {
@@ -32,10 +39,20 @@ public class Person extends Character {
     }
 
     public enum AgeCategory {
-        BABY,
-        CHILD,
-        ADULT,
-        SENIOR;
+        BABY(1),
+        CHILD(1),
+        ADULT(1),
+        SENIOR(1);
+
+        private final double coefficient;
+
+        AgeCategory(double coefficient) {
+            this.coefficient = coefficient;
+        }
+
+        public double getCoefficient() {
+            return coefficient;
+        }
     }
 
     public Person(Gender gender, BodyType bodyType, int age, boolean isPregnant, Profession profession) {
@@ -89,6 +106,26 @@ public class Person extends Character {
         this.isYou = isYou;
     }
 
+    /**
+     * Gain person's additional mark based on their profession,pregnancy state,
+     * if this person is usr
+     *
+     * @author Fan Jia
+     * @methodName getMark
+     * @return double
+     */
+    @Override
+    public double getMark() {
+        double mark = super.getMark();
+        mark += this.profession.getCoefficient();
+        if (isPregnant) {
+            mark += 5;
+        }
+        if (isYou) {
+            mark+= 1000000; //I WILL ALIVE!!!!
+        }
+        return mark;
+    }
 
 
     @Override
@@ -98,14 +135,14 @@ public class Person extends Character {
         if (isYou()) {
             display = display + "you ";
         }
-        display+= getBodyType().toString().toLowerCase()+" ";
-        display = display + getAgeCategory().toString().toLowerCase() + " ";
+        display+= getBodyType().toString().toLowerCase()+" ";                       //body type
+        display+= getAgeCategory().toString().toLowerCase() + " ";        //age category
         if (getAgeCategory().equals(AgeCategory.ADULT)) {
-            display = display + getProfession().toString().toLowerCase() + " ";
+            display = display + getProfession().toString().toLowerCase() + " ";     //profession
         }
-        display = display + getGender().toString().toLowerCase() + " ";
+        display = display + getGender().toString().toLowerCase() + " ";             //gender
         if (isPregnant()) {
-            display = display + "pregnant";
+            display = display + "pregnant";                                         //pregnant
         }
         return display;
     }

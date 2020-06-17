@@ -1,14 +1,15 @@
-package proj.ethicalengine;
+package ethicalengine;
 
 import java.util.ArrayList;
 import java.util.Collections;
 
 /**
- * @description:Scenario
+ * @description: Scenario
  * @author: Fan Jia
  */
 public class Scenario {
-    private ArrayList<Character> passengers = new ArrayList<>();
+
+    private ArrayList<Character> passengers = new ArrayList<>();              //more flexible
     private ArrayList<Character> pedestrians = new ArrayList<>();
     private boolean isLegalCrossing;
 
@@ -23,16 +24,16 @@ public class Scenario {
 
     }
 
-    public ArrayList<Character> getPassengers() {
-        return passengers;
+    public Character[] getPassengers() {
+        return passengers.toArray(new Character[0]);
     }
 
     public void setPassengers(ArrayList<Character> passengers) {
         this.passengers = passengers;
     }
 
-    public ArrayList<Character> getPedestrians() {
-        return pedestrians;
+    public Character[] getPedestrians() {
+        return pedestrians.toArray(new Character[0]);
     }
 
     public void setPedestrians(ArrayList<Character> pedestrians) {
@@ -47,8 +48,22 @@ public class Scenario {
         isLegalCrossing = legalCrossing;
     }
 
-    public boolean hasYouInCar() {
+    public int getPassengerCount() {
+        return passengers.size();
+    }
 
+    public int getPedestrianCount() {
+        return pedestrians.size();
+    }
+
+    /**
+     * If usr in the care
+     *
+     * @author Fan Jia
+     * @methodName hasYouInCar
+     * @return boolean
+     */
+    public boolean hasYouInCar() {
         for (Character passenger : passengers) {
             if (passenger.getClass().equals(Person.class)) {
                 if (((Person) passenger).isYou()) {
@@ -59,6 +74,13 @@ public class Scenario {
         return false;
     }
 
+    /**
+     * If usr in the lane
+     *
+     * @author Fan Jia
+     * @methodName hasYouInLane
+     * @return boolean
+     */
     public boolean hasYouInLane() {
         for (Character pedestrian : pedestrians) {
             if (pedestrian.getClass().equals(Person.class)) {
@@ -70,14 +92,13 @@ public class Scenario {
         return false;
     }
 
-    public int getPassengerCount() {
-        return passengers.size();
-    }
-
-    public int getPedestrianCount() {
-        return pedestrians.size();
-    }
-
+    /**
+     * format display
+     *
+     * @author Fan Jia
+     * @methodName toString
+     * @return java.lang.String
+     */
     @Override
     public String toString() {
         String display = "";
