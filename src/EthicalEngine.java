@@ -13,6 +13,15 @@ import java.util.Scanner;
  */
 public class EthicalEngine {
 
+    public static class InvalidInputException extends Exception {
+        public InvalidInputException() {
+            super("Invalid response. ");
+        }
+        public InvalidInputException(String message) {
+            super(message);
+        }
+    }
+
     String configPath = null;
     String resultPath = null;
     public static boolean interactiveMode = false;

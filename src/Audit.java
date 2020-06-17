@@ -67,10 +67,10 @@ public class Audit {
                         } else if (decision.equals("pedestrian") || decision.equals("pedestrians") || decision.equals("2")) {
                             recordThisScenario(scenarios.get(i), EthicalEngine.Decision.PEDESTRIANS);
                         } else {
-                            throw new InvalidInputException();
+                            throw new EthicalEngine.InvalidInputException();
                         }
                         done = true;
-                    } catch (InvalidInputException e) {
+                    } catch (EthicalEngine.InvalidInputException e) {
                         System.out.print(e.getMessage());
                     }
                 }
@@ -148,17 +148,6 @@ public class Audit {
             count(passengersList, false);
         }
 
-        charaStatistics.sort((o1, o2) -> {
-            double o1Ratio = Double.parseDouble(o1.ratio());
-            double o2Ratio = Double.parseDouble(o2.ratio());
-            if (o1Ratio > o2Ratio) {
-                return -1;
-            } else if (o1Ratio < o2Ratio) {
-                return 1;
-            } else {
-                return o1.getCharacteristicName().compareTo(o2.getCharacteristicName());
-            }
-        });
     }
 
     /**
@@ -268,6 +257,19 @@ public class Audit {
      */
     @Override
     public String toString() {
+
+        charaStatistics.sort((o1, o2) -> {
+            double o1Ratio = Double.parseDouble(o1.ratio());
+            double o2Ratio = Double.parseDouble(o2.ratio());
+            if (o1Ratio > o2Ratio) {
+                return -1;
+            } else if (o1Ratio < o2Ratio) {
+                return 1;
+            } else {
+                return o1.getCharacteristicName().compareTo(o2.getCharacteristicName());
+            }
+        });
+
         if (this.totalRuns == 0) {
             return "no audit available";
         }

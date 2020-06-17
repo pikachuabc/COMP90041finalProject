@@ -1,12 +1,11 @@
-package ethicalengine;
 
 import java.util.ArrayList;
 
 /**
- * @description:each characterstic
+ * @description:
  * @author: Fan Jia
  */
-public class CharaStatistic {
+public  class CharaStatistic {
 
     private String characteristicName;
     private int totalCase=0;

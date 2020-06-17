@@ -5,10 +5,20 @@ import java.util.Collections;
 import java.util.Random;
 
 /**
- * @description:ScenarioGenerator
+ * @description: ScenarioGenerator
  * @author: Fan Jia
  */
 public class ScenarioGenerator {
+
+    public static class InvalidDataFormatException extends Exception{
+        public InvalidDataFormatException(int lineNumber) {
+            super("WARNING: invalid data format in config file in line "+lineNumber);
+        }
+        public InvalidDataFormatException(String message) {
+            super(message);
+        }
+    }
+
     private Random random;
     private int pedestrianCountMinimum = 1;
     private int passengerCountMinimum = 1;
@@ -206,7 +216,7 @@ public class ScenarioGenerator {
 
                 try {
                     gender = Character.Gender.contains(strings[1]);
-                } catch (InvalidCharacteristicException e) {
+                } catch ( Character.InvalidCharacteristicException e) {
                     System.out.println(e.getMessage() + baseLineNumber);
                     gender = Character.Gender.UNKNOWN;
                 }
@@ -222,7 +232,7 @@ public class ScenarioGenerator {
                 if (isPerson) {
                     try {
                         bodyType = Character.BodyType.contains(strings[3]);
-                    } catch (InvalidCharacteristicException e) {
+                    } catch (Character.InvalidCharacteristicException e) {
                         System.out.println(e.getMessage() + baseLineNumber);
                         bodyType = Character.BodyType.UNSPECIFIED;
                     }
@@ -232,7 +242,7 @@ public class ScenarioGenerator {
                     } else {
                         try {
                             profession = Person.Profession.contains(strings[4]);
-                        } catch (InvalidCharacteristicException e) {
+                        } catch (Character.InvalidCharacteristicException e) {
                             System.out.println(e.getMessage() + baseLineNumber);
                             profession = Person.Profession.UNKNOWN;
                         }

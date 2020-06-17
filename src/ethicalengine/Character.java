@@ -1,10 +1,22 @@
 package ethicalengine;
 
+import java.util.ArrayList;
+
 /**
  * @description: Character
  * @author: Fan Jia
  */
 public abstract class Character {
+
+    public static class InvalidCharacteristicException extends Exception {
+        public InvalidCharacteristicException(int lineNumber) {
+            super("WARNING: invalid data format in config file in line "+lineNumber);
+        }
+        public InvalidCharacteristicException(String message) {
+            super(message);
+        }
+    }
+
     private Gender gender;
     private BodyType bodyType;
     private int age;
@@ -122,6 +134,8 @@ public abstract class Character {
         return  getGender().getCoefficient()+
                 getBodyType().getCoefficient();
     }
+
+
 
 
 }
