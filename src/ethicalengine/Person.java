@@ -1,7 +1,7 @@
 package ethicalengine;
 
 /**
- * @description:Person
+ * @description: Person
  * @author: Fan Jia
  */
 public class Person extends Character {
@@ -34,7 +34,7 @@ public class Person extends Character {
                     return profession;
                 }
             }
-            throw new InvalidCharacteristicException("WARNING: invalid characteristic in config file in line ");
+            throw new InvalidCharacteristicException();
         }
     }
 

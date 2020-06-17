@@ -1,6 +1,5 @@
 import ethicalengine.*;
 import ethicalengine.Character;
-
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -16,9 +15,6 @@ public class EthicalEngine {
     public static class InvalidInputException extends Exception {
         public InvalidInputException() {
             super("Invalid response. ");
-        }
-        public InvalidInputException(String message) {
-            super(message);
         }
     }
 
@@ -111,16 +107,20 @@ public class EthicalEngine {
         try {
             fr = new FileReader(file);
             reader = new BufferedReader(fr);
-            reader.readLine();  //skip caption row
-
             int lineNumber = 1;
+            reader.readLine();  //skip caption row
+            lineNumber++;
+
             String line = reader.readLine();
+
 
 
             while (line != null) {
 
                 String[] info = line.split(",", -1);
                 if (info[0].contains("scenario:")) {
+                    int baselineNumber = lineNumber;
+                    lineNumber++;
                     ArrayList<String[]> scenarioInfo = new ArrayList<>();        //each character's information in this scenario
                     boolean isLegal = info[0].split(":")[1].contains("green");
 
@@ -131,7 +131,7 @@ public class EthicalEngine {
                         lineNumber++;
                     }
 
-                    Scenario scenario = scenarioGenerator.generate(scenarioInfo, isLegal, lineNumber);
+                    Scenario scenario = scenarioGenerator.generate(scenarioInfo, isLegal, baselineNumber);
                     scenarios.add(scenario);
                 }
             }
