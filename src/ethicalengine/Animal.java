@@ -4,7 +4,7 @@ package ethicalengine;
 import java.util.ArrayList;
 
 /**
- * @description:Animal
+ * @description: Animal
  * @author: Fan Jia
  */
 public class Animal extends Character {

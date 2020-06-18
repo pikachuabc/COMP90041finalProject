@@ -9,12 +9,9 @@ import java.util.Random;
  */
 public class ScenarioGenerator {
 
-    public static class InvalidDataFormatException extends Exception{
-        public InvalidDataFormatException(int lineNumber) {
-            super("WARNING: invalid data format in config file in line "+lineNumber);
-        }
-        public InvalidDataFormatException(String message) {
-            super(message);
+    public class InvalidDataFormatException extends Exception{
+        public InvalidDataFormatException() {
+            super("WARNING: invalid data format in config file in line ");
         }
     }
 
@@ -193,7 +190,7 @@ public class ScenarioGenerator {
         ArrayList<Character> pedestrian = new ArrayList<>();
 
         for (String[] strings : scenarioInfo) {             //for each Character(row)
-
+            baseLineNumber++;
             boolean isPerson = strings[0].equals("person");
 
             Character.Gender gender;                        //common characteristics gender & age
@@ -207,7 +204,7 @@ public class ScenarioGenerator {
 
             try {
                 if (strings.length != 10) {
-                    throw new InvalidDataFormatException(baseLineNumber);
+                    throw new InvalidDataFormatException();
                 }
 
                 try {
