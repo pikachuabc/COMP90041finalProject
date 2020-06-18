@@ -9,8 +9,11 @@ import java.util.ArrayList;
 public abstract class Character {
 
     public static class InvalidCharacteristicException extends Exception {
-        public InvalidCharacteristicException() {
-            super("WARNING: invalid characteristic in config file in line ");
+        public InvalidCharacteristicException(int lineNumber) {
+            super("WARNING: invalid data format in config file in line "+lineNumber);
+        }
+        public InvalidCharacteristicException(String message) {
+            super(message);
         }
     }
 
@@ -42,7 +45,7 @@ public abstract class Character {
                     return gender;
                 }
             }
-            throw new InvalidCharacteristicException();
+            throw new InvalidCharacteristicException("WARNING: invalid characteristic in config file in line ");
         }
     }
 
@@ -67,7 +70,7 @@ public abstract class Character {
                     return bodyType;
                 }
             }
-            throw new InvalidCharacteristicException();
+            throw new InvalidCharacteristicException("WARNING: invalid characteristic in config file in line ");
         }
     }
 
