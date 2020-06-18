@@ -152,7 +152,7 @@ public class EthicalEngine {
     /**
      * @param configDate : decide if the program should generate scenarios for user
      * @return void
-     * @throws IOException
+     * @throws IOException when something wrong while reading welcome file
      * @author Fan Jia
      * @methodName interActive
      */
@@ -223,7 +223,7 @@ public class EthicalEngine {
                 if (collectDate) {
                     audit.printToFile(resultPath);
                 }
-                System.out.println("That’s all. Press any key to quit.");
+                System.out.println("That's all. Press any key to quit.");
                 sc.next();
                 System.exit(0);
 

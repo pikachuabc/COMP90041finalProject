@@ -1,7 +1,6 @@
 package ethicalengine;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Random;
 
 /**
@@ -125,10 +124,7 @@ public class ScenarioGenerator {
 
         Character.Gender[] genders = Character.Gender.values();
         Character.BodyType[] bodyTypes = Character.BodyType.values();
-//        String[] species = new String[Animal.specie.size()];                         //species
-//        for (int i = 0; i < Animal.specie.size(); i++) {
-//            species[i] = Animal.specie.get(i);
-//        }
+
         String[] species = Animal.specie.toArray(new String[0]);
 
         age = random.nextInt(20);

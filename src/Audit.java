@@ -257,7 +257,9 @@ public class Audit {
      */
     @Override
     public String toString() {
-
+        if (this.totalRuns == 0) {
+            return "no audit available";
+        }
         charaStatistics.sort((o1, o2) -> {
             double o1Ratio = Double.parseDouble(o1.ratio());
             double o2Ratio = Double.parseDouble(o2.ratio());
@@ -270,9 +272,6 @@ public class Audit {
             }
         });
 
-        if (this.totalRuns == 0) {
-            return "no audit available";
-        }
         String summary = "";
         summary += "======================================" + "\n";
         summary += "# " + getAuditType() + " Audit" + "\n";
