@@ -13,6 +13,8 @@ public class Person extends Character {
         DOCTOR(1),
         CEO(1),
         CRIMINAL(1),
+        STUDENT(1),
+        PROFESSOR(1),
         HOMELESS(1),
         UNEMPLOYED(1),
         UNKNOWN(1),
@@ -87,7 +89,7 @@ public class Person extends Character {
 
     public AgeCategory getAgeCategory() {
         int age = getAge();
-        if (age <= 5 && age >= 0) {
+        if (age <= 4 && age >= 0) {
             return AgeCategory.BABY;
         } else if (age <= 16 && age >= 5) {
             return AgeCategory.CHILD;
@@ -140,9 +142,9 @@ public class Person extends Character {
         if (getAgeCategory().equals(AgeCategory.ADULT)) {
             display = display + getProfession().toString().toLowerCase() + " ";     //profession
         }
-        display = display + getGender().toString().toLowerCase() + " ";             //gender
+        display = display + getGender().toString().toLowerCase();             //gender
         if (isPregnant()) {
-            display = display + "pregnant";                                         //pregnant
+            display = display + " pregnant";                                         //pregnant
         }
         return display;
     }

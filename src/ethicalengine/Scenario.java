@@ -119,7 +119,6 @@ public class Scenario {
         for (Character pedestrian : pedestrians) {
             display += "- " + pedestrian.toString() + "\n";
         }
-
         return display;
     }
 }

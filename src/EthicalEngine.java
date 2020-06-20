@@ -1,3 +1,4 @@
+
 import ethicalengine.*;
 import ethicalengine.Character;
 
@@ -171,7 +172,7 @@ public class EthicalEngine {
         boolean done = false;
         while (!done) {
             try {
-                System.out.println("Do you consent to have your decisions saved to a file? (yes/no)\n");
+                System.out.println("Do you consent to have your decisions saved to a file? (yes/no)");
                 String respond = sc.nextLine();
                 if (respond.equals("yes")) {
                     collectDate = true;
@@ -190,16 +191,24 @@ public class EthicalEngine {
         audit.setAuditType("User");
         ScenarioGenerator generator = new ScenarioGenerator();
 
+        if (!configDate) {                     //add scenario from self-generated or config file
+            for (int i = 0; i < 3; i++) {
+                audit.scenarios.add(generator.generate());
+            }
+        } else {
+            audit.scenarios.addAll(Arrays.asList(scenarios));
+        }
+
         while (true) {
             if (!configDate) {                     //add scenario from self-generated or config file
                 for (int i = 0; i < 3; i++) {
                     audit.scenarios.add(generator.generate());
                 }
-            } else {
-                audit.scenarios.addAll(Arrays.asList(scenarios));
             }
             audit.run();                            //main process of making choice
-            done = false;                           //ask user if continue
+
+            //ask user if continue after 3 times
+            done = configDate && audit.totalRuns == audit.scenarios.size();
             while (!done) {
                 try {
                     System.out.println("Would you like to continue? (yes/no)");
@@ -219,13 +228,13 @@ public class EthicalEngine {
             }
 
 
-            if (configDate) {                   //when user want to continue and no scenarios from config
-                audit.printStatistic();
+            if (configDate && audit.totalRuns==audit.scenarios.size()) {                   //when user want to continue and no scenarios from config
+                //audit.printStatistic();
                 if (collectDate) {
                     audit.printToFile(resultPath);
                 }
-                System.out.println("That's all. Press any key to quit.");
-                sc.next();
+                System.out.println("That's all. Press Enter to quit.");
+                sc.nextLine();
                 System.exit(0);
 
             }

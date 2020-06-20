@@ -242,7 +242,7 @@ public class ScenarioGenerator {
                     }
 
                     pregnant = strings[5].equals("yes") || strings[5].equals("true");
-                    isYou = strings[5].equals("yes") || strings[5].equals("true");
+                    isYou = strings[6].equals("yes") || strings[6].equals("true");
 
                     Person person = new Person(gender, bodyType, age, pregnant, profession);
                     if (isYou) {
@@ -256,8 +256,8 @@ public class ScenarioGenerator {
 
                 } else {       //animal
                     specie = strings[7];
-                    if (!Animal.specie.contains(strings[7])) {
-                        Animal.specie.add(strings[7]);          //add new specie, assume also an animal name
+                    if (!Animal.specie.contains(strings[7].toUpperCase())) {
+                        Animal.specie.add(strings[7].toUpperCase());          //add new specie, assume also an animal name
                     }
                     isPet = strings[8].equals("yes") || strings[8].equals("true");
                     Animal animal = new Animal(specie);

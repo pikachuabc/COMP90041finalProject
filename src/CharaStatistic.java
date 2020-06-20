@@ -74,7 +74,7 @@ public  class CharaStatistic {
     }
 
     public String ratio() {
-        return String.format("%.2f",(double)totalSurvive/totalCase);
+        return String.format("%.1f",(double)totalSurvive/totalCase);
     }
 
     @Override

@@ -56,7 +56,7 @@ public class Audit {
 
         if (EthicalEngine.interactiveMode) {        //user make choice
             for ( int i = this.totalRuns; i < scenarios.size(); i++) {  //resume last
-                System.out.println(scenarios.get(i));
+                System.out.print(scenarios.get(i));
                 boolean done = false;
                 while (!done) {
                     try {
@@ -74,7 +74,7 @@ public class Audit {
                         System.out.print(e.getMessage());
                     }
                 }
-                if (totalRuns !=0 && totalRuns%3==0) {          //if it has been 3 scenarios
+                if ((totalRuns !=0 && totalRuns%3==0) || totalRuns==scenarios.size()) {          //if it has been 3 scenarios
                     printStatistic();
                     return;
                 }
@@ -121,7 +121,7 @@ public class Audit {
         this.totalRuns++;
 
         CharaStatistic green = CharaStatistic.findCharacter("green", charaStatistics);
-        CharaStatistic red = CharaStatistic.findCharacter("green", charaStatistics);
+        CharaStatistic red = CharaStatistic.findCharacter("red", charaStatistics);
         assert green != null;
         green.setTotalCase(scenarios.size());                   //scenarios.size() might change
         assert red != null;
@@ -283,7 +283,8 @@ public class Audit {
             }
         }
         summary += "--" + "\n";
-        summary += "average age: " + surviveTotalAge / personSurvivor + "\n";
+        String avgAge = String.format("%.1f",(double)surviveTotalAge / personSurvivor);
+        summary += "average age: " + avgAge;
         return summary;
     }
 
@@ -297,7 +298,6 @@ public class Audit {
      */
     public void printStatistic() {
         System.out.println(toString());
-        System.out.println();
     }
 
     /**
@@ -311,13 +311,14 @@ public class Audit {
     public void printToFile(String filepath) {
 
         try {
-            File myFile = new File(filepath);
-            FileOutputStream fos = new FileOutputStream(myFile, true);
-            OutputStreamWriter writer = new OutputStreamWriter(fos, StandardCharsets.US_ASCII);
-            writer.write(toString());
-            writer.close();
-            fos.close();
-
+            if (filepath != null) {
+                File myFile = new File(filepath);
+                FileOutputStream fos = new FileOutputStream(myFile, true);
+                OutputStreamWriter writer = new OutputStreamWriter(fos, StandardCharsets.US_ASCII);
+                writer.write(toString());
+                writer.close();
+                fos.close();
+            }
         } catch (IOException e) {
             System.out.println("ERROR: could not print results. Target directory does not exist.");
         }
