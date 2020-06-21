@@ -66,6 +66,7 @@ public class Person extends Character {
     public Person(Person otherPerson) {
         this.isPregnant = otherPerson.isPregnant();
         this.profession = otherPerson.getProfession();
+        this.isYou = otherPerson.isYou();
         this.setAge(otherPerson.getAge());
         this.setBodyType(otherPerson.getBodyType());
         this.setGender(otherPerson.getGender());

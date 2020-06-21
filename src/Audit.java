@@ -312,12 +312,12 @@ public class Audit {
 
         try {
             if (filepath != null) {
-                File myFile = new File(filepath);
-                FileOutputStream fos = new FileOutputStream(myFile, true);
-                OutputStreamWriter writer = new OutputStreamWriter(fos, StandardCharsets.US_ASCII);
+
+                OutputStreamWriter writer = new OutputStreamWriter(
+                        new FileOutputStream(filepath,true),
+                        StandardCharsets.US_ASCII);
                 writer.write(toString());
                 writer.close();
-                fos.close();
             }
         } catch (IOException e) {
             System.out.println("ERROR: could not print results. Target directory does not exist.");

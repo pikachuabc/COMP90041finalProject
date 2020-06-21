@@ -3,7 +3,6 @@ import ethicalengine.*;
 import ethicalengine.Character;
 
 import java.io.*;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
@@ -160,15 +159,12 @@ public class EthicalEngine {
      */
     public void interActive(boolean configDate) throws IOException {
 
-        File f = new File("welcome.ascii");
-        FileInputStream fis = new FileInputStream(f);
-        InputStreamReader isr = new InputStreamReader(fis, StandardCharsets.US_ASCII);
-        BufferedReader reader = new BufferedReader(isr);
+        InputStreamReader isr = new InputStreamReader(new FileInputStream("welcome.ascii"));
+        BufferedReader br = new BufferedReader(isr);
         String line;
-        while ((line = reader.readLine()) != null) {
+        while ((line = br.readLine()) != null) {
             System.out.println(line);
         }
-
         boolean done = false;
         while (!done) {
             try {

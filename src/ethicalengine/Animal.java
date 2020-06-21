@@ -1,6 +1,4 @@
 package ethicalengine;
-
-
 import java.util.ArrayList;
 
 /**
@@ -10,6 +8,7 @@ import java.util.ArrayList;
 public class Animal extends Character {
     private String species;
     private boolean isPet;
+
     public static ArrayList<String> specie = new ArrayList<String>(){{
         add("TURTLE");
         add("BIRD");
