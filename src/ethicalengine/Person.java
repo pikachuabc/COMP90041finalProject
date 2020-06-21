@@ -120,6 +120,7 @@ public class Person extends Character {
     @Override
     public double getMark() {
         double mark = super.getMark();
+        mark += this.getAgeCategory().getCoefficient();
         mark += this.profession.getCoefficient();
         if (isPregnant) {
             mark += 5;
