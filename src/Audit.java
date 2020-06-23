@@ -67,10 +67,10 @@ public class Audit {
                         } else if (decision.equals("pedestrian") || decision.equals("pedestrians") || decision.equals("2")) {
                             recordThisScenario(scenarios.get(i), EthicalEngine.Decision.PEDESTRIANS);
                         } else {
-                            throw new EthicalEngine.InvalidInputException();
+                            throw new InvalidInputException();
                         }
                         done = true;
-                    } catch (EthicalEngine.InvalidInputException e) {
+                    } catch (InvalidInputException e) {
                         System.out.print(e.getMessage());
                     }
                 }
@@ -199,7 +199,7 @@ public class Audit {
      *
      * @author Fan Jia
      * @methodName allCCharacteristic
-     * @return java.util.ArrayList<ethicalengine.CharaStatistic>
+     * @return java.util.ArrayList<ethicalengine.ethicalengine.CharaStatistic>
      */
     private ArrayList<CharaStatistic> allCCharacteristic() {
         ArrayList<CharaStatistic> characteristics = new ArrayList<>();

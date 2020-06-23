@@ -9,12 +9,6 @@ import java.util.Random;
  */
 public class ScenarioGenerator {
 
-    public class InvalidDataFormatException extends Exception{
-        public InvalidDataFormatException() {
-            super("WARNING: invalid data format in config file in line ");
-        }
-    }
-
     private Random random;
     private int pedestrianCountMinimum = 1;
     private int passengerCountMinimum = 1;
@@ -209,7 +203,7 @@ public class ScenarioGenerator {
 
                 try {
                     gender = Character.Gender.contains(strings[1]);
-                } catch ( Character.InvalidCharacteristicException e) {
+                } catch ( InvalidCharacteristicException e) {
                     System.out.println(e.getMessage() + baseLineNumber);
                     gender = Character.Gender.UNKNOWN;
                 }
@@ -225,7 +219,7 @@ public class ScenarioGenerator {
                 if (isPerson) {
                     try {
                         bodyType = Character.BodyType.contains(strings[3]);
-                    } catch (Character.InvalidCharacteristicException e) {
+                    } catch (InvalidCharacteristicException e) {
                         System.out.println(e.getMessage() + baseLineNumber);
                         bodyType = Character.BodyType.UNSPECIFIED;
                     }
@@ -235,7 +229,7 @@ public class ScenarioGenerator {
                     } else {
                         try {
                             profession = Person.Profession.contains(strings[4]);
-                        } catch (Character.InvalidCharacteristicException e) {
+                        } catch (InvalidCharacteristicException e) {
                             System.out.println(e.getMessage() + baseLineNumber);
                             profession = Person.Profession.UNKNOWN;
                         }

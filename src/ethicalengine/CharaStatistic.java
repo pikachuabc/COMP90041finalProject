@@ -1,3 +1,4 @@
+package ethicalengine;
 
 import java.util.ArrayList;
 
@@ -45,7 +46,7 @@ public  class CharaStatistic {
      * @methodName findCharacter
      * @param name :
      * @param charaStatistics :
-     * @return ethicalengine.CharaStatistic
+     * @return ethicalengine.ethicalengine.CharaStatistic
      */
     public static CharaStatistic findCharacter(String name,
                                                ArrayList<CharaStatistic> charaStatistics) {

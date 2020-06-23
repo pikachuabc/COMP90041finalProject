@@ -3,6 +3,10 @@ Character.java
 Person.java
 Scenario.java
 ScenarioGenerator.java
+InvalidCharacteristicException.java
+InvalidDataFormatException.java
+InvalidInputException.java
+CharaStatistic.java
 
 
 

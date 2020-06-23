@@ -8,11 +8,6 @@ import java.util.ArrayList;
  */
 public abstract class Character {
 
-    public static class InvalidCharacteristicException extends Exception {
-        public InvalidCharacteristicException() {
-            super("WARNING: invalid characteristic in config file in line ");
-        }
-    }
 
     private Gender gender;
     private BodyType bodyType;
