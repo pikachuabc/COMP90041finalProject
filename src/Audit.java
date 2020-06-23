@@ -3,7 +3,9 @@ import ethicalengine.Character;
 
 
 import java.io.*;
+import java.math.RoundingMode;
 import java.nio.charset.StandardCharsets;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -123,9 +125,8 @@ public class Audit {
         CharaStatistic green = CharaStatistic.findCharacter("green", charaStatistics);
         CharaStatistic red = CharaStatistic.findCharacter("red", charaStatistics);
         assert green != null;
-        green.setTotalCase(scenarios.size());                   //scenarios.size() might change
         assert red != null;
-        red.setTotalCase(scenarios.size());
+        int totalCharacter = scenario.getPassengerCount()+scenario.getPedestrianCount();
 
         ArrayList<ethicalengine.Character> pedestriansList = new ArrayList<>();
         ArrayList<ethicalengine.Character> passengersList = new ArrayList<>();
@@ -133,17 +134,24 @@ public class Audit {
         Collections.addAll(passengersList, scenario.getPassengers());
 
 
-        if (scenario.isLegalCrossing()) {
-            green.setTotalSurvive(green.getTotalSurvive() + 1);
-        } else {
-            red.setTotalSurvive(red.getTotalSurvive() + 1);
-        }
-
-
         if (decision.equals(EthicalEngine.Decision.PASSENGERS)) { //save passengers
+            if (!scenario.isLegalCrossing()) {
+                red.setTotalCase(red.getTotalCase() + totalCharacter);
+                red.setTotalSurvive(red.getTotalSurvive() + scenario.getPassengerCount());
+            } else {
+                green.setTotalCase(green.getTotalCase() + totalCharacter);
+                green.setTotalSurvive(green.getTotalSurvive() + scenario.getPassengerCount());
+            }
             count(passengersList, true);
             count(pedestriansList, false);
         } else {        //save pedestrians
+            if (!scenario.isLegalCrossing()) {
+                red.setTotalCase(red.getTotalCase() + totalCharacter);
+                red.setTotalSurvive(red.getTotalSurvive() + scenario.getPedestrianCount());
+            } else {
+                green.setTotalCase(green.getTotalCase() + totalCharacter);
+                green.setTotalSurvive(green.getTotalSurvive() + scenario.getPedestrianCount());
+            }
             count(pedestriansList, true);
             count(passengersList, false);
         }
@@ -160,19 +168,25 @@ public class Audit {
      * @return void
      */
     private void count(ArrayList<ethicalengine.Character> List, boolean isSurvive) {
+        CharaStatistic animals = CharaStatistic.findCharacter("animal", charaStatistics);
+        CharaStatistic persons = CharaStatistic.findCharacter("person", charaStatistics);
+        assert animals != null;
+        assert persons != null;
+
         for (ethicalengine.Character character1 : List) {
             if (character1.getClass().equals(Person.class)) {    //count person
                 Person person = (Person) character1;
                 String[] characters = person.toString().toLowerCase().split(" ");
                 for (String character : characters) {           //for every person count their character
                     for (CharaStatistic charaStatistic : charaStatistics) {
-                        if (charaStatistic.getCharacteristicName().equals(character)
-                                || charaStatistic.getCharacteristicName().equals("person")) {
+                        if (charaStatistic.getCharacteristicName().equals(character)) {
                             charaStatistic.survive(isSurvive);
                         }
                     }
                 }
+                persons.setTotalCase(persons.getTotalCase()+1);
                 if (isSurvive) {
+                    persons.setTotalSurvive(persons.getTotalSurvive()+1);
                     surviveTotalAge += character1.getAge();
                     personSurvivor++;
                 }
@@ -181,13 +195,15 @@ public class Audit {
                 String[] characters = animal.toString().toLowerCase().split(" ");
                 for (String character : characters) {
                     for (CharaStatistic charaStatistic : charaStatistics) {
-                        if (charaStatistic.getCharacteristicName().equals(character)
-                                || charaStatistic.getCharacteristicName().equals("animal")) {
+                        if (charaStatistic.getCharacteristicName().equals(character)) {
                             charaStatistic.survive(isSurvive);
                         }
                     }
                 }
-
+                animals.setTotalCase(animals.getTotalCase()+1);
+                if (isSurvive) {
+                    animals.setTotalSurvive(animals.getTotalSurvive()+1);
+                }
             }
         }
     }
@@ -221,7 +237,7 @@ public class Audit {
         }
         Person.Profession[] professions = Person.Profession.values();                                     //profession
         for (Person.Profession profession : professions) {
-            if (!profession.equals(Person.Profession.UNKNOWN) && !profession.equals(Person.Profession.NONE))
+            if ( !profession.equals(Person.Profession.NONE))
                 characteristics.add(new CharaStatistic(profession.toString().toLowerCase()));
         }
         characteristics.add(new CharaStatistic("pregnant"));                              //pregnant
@@ -261,8 +277,8 @@ public class Audit {
             return "no audit available";
         }
         charaStatistics.sort((o1, o2) -> {
-            double o1Ratio = Double.parseDouble(o1.ratio());
-            double o2Ratio = Double.parseDouble(o2.ratio());
+            float o1Ratio =Float.parseFloat(o1.ratio());
+            float o2Ratio =Float.parseFloat(o2.ratio());
             if (o1Ratio > o2Ratio) {
                 return -1;
             } else if (o1Ratio < o2Ratio) {
@@ -271,6 +287,9 @@ public class Audit {
                 return o1.getCharacteristicName().compareTo(o2.getCharacteristicName());
             }
         });
+
+        DecimalFormat df = new DecimalFormat("0.0");
+        df.setRoundingMode(RoundingMode.DOWN);
 
         String summary = "";
         summary += "======================================" + "\n";
@@ -283,8 +302,8 @@ public class Audit {
             }
         }
         summary += "--" + "\n";
-        String avgAge = String.format("%.1f",(double)surviveTotalAge / personSurvivor);
-        summary += "average age: " + avgAge;
+
+        summary += "average age: " + df.format((double)surviveTotalAge / personSurvivor);
         return summary;
     }
 

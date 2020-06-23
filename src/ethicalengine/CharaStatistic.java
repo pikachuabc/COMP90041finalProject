@@ -1,5 +1,7 @@
 package ethicalengine;
 
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 /**
@@ -75,14 +77,17 @@ public  class CharaStatistic {
     }
 
     public String ratio() {
+        DecimalFormat df = new DecimalFormat("0.0");
+        df.setRoundingMode(RoundingMode.DOWN);
         if (totalCase == 0) {
             return "0";
         }
-        return String.format("%.1f",(double)totalSurvive/totalCase);
+        return df.format((double)totalSurvive/totalCase);
     }
 
     @Override
     public String toString() {
+
         return characteristicName.toLowerCase()+": "+ratio()+"\n";
     }
 }
