@@ -1,7 +1,7 @@
 package ethicalengine;
 
 /**
- * @description:
+ * @description: handle InvalidInputException
  * @author: Fan Jia
  */
 public class InvalidInputException extends Exception {

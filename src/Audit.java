@@ -1,7 +1,5 @@
 import ethicalengine.*;
 import ethicalengine.Character;
-
-
 import java.io.*;
 import java.math.RoundingMode;
 import java.nio.charset.StandardCharsets;
@@ -49,25 +47,31 @@ public class Audit {
      * use {@link #recordThisScenario(Scenario, EthicalEngine.Decision)}
      * to record statistic
      *
+     * @return void
      * @author Fan Jia
      * @methodName run
-     * @return void
      * @see #recordThisScenario(Scenario, EthicalEngine.Decision)
      */
     public void run() {
 
         if (EthicalEngine.interactiveMode) {        //user make choice
-            for ( int i = this.totalRuns; i < scenarios.size(); i++) {  //resume last
+            for (int i = this.totalRuns; i < scenarios.size(); i++) {  //resume last
                 System.out.print(scenarios.get(i));
                 boolean done = false;
                 while (!done) {
                     try {
                         System.out.println("Who should be saved? (passenger(s) [1] or pedestrian(s) [2])");
                         String decision = EthicalEngine.sc.nextLine();
-                        if (decision.equals("passenger") || decision.equals("passengers") || decision.equals("1")) {
-                            recordThisScenario(scenarios.get(i), EthicalEngine.Decision.PASSENGERS);
-                        } else if (decision.equals("pedestrian") || decision.equals("pedestrians") || decision.equals("2")) {
-                            recordThisScenario(scenarios.get(i), EthicalEngine.Decision.PEDESTRIANS);
+                        if (decision.equals("passenger") ||
+                            decision.equals("passengers") ||
+                            decision.equals("1")) {
+                            recordThisScenario(scenarios.get(i),
+                                    EthicalEngine.Decision.PASSENGERS);
+                        } else if (decision.equals("pedestrian") ||
+                                    decision.equals("pedestrians") ||
+                                    decision.equals("2")) {
+                            recordThisScenario(scenarios.get(i),
+                                    EthicalEngine.Decision.PEDESTRIANS);
                         } else {
                             throw new InvalidInputException();
                         }
@@ -76,7 +80,7 @@ public class Audit {
                         System.out.print(e.getMessage());
                     }
                 }
-                if ((totalRuns !=0 && totalRuns%3==0) || totalRuns==scenarios.size()) {          //if it has been 3 scenarios
+                if ((totalRuns != 0 && totalRuns % 3 == 0) || totalRuns == scenarios.size()) {          //if it has been 3 scenarios
                     printStatistic();
                     return;
                 }
@@ -93,10 +97,10 @@ public class Audit {
     /**
      * generate {@code runs} random scenarios and run
      *
-     * @author Fan Jia
-     * @methodName run
      * @param runs : this audit will run {@code runs} random scenarios
      * @return void
+     * @author Fan Jia
+     * @methodName run
      * @see Audit#run()
      * @see ScenarioGenerator#generate()
      */
@@ -109,14 +113,15 @@ public class Audit {
         run();
 
     }
+
     /**
-     *  for recording each scenario's each character's each characteristic in given decision
+     * for recording each scenario's each character's each characteristic in given decision
      *
-     * @author Fan Jia
-     * @methodName recordThisScenario
      * @param scenario : scenario
      * @param decision : decision made by usr or program
      * @return void
+     * @author Fan Jia
+     * @methodName recordThisScenario
      */
     public void recordThisScenario(Scenario scenario, EthicalEngine.Decision decision) {
 
@@ -126,7 +131,7 @@ public class Audit {
         CharaStatistic red = CharaStatistic.findCharacter("red", charaStatistics);
         assert green != null;
         assert red != null;
-        int totalCharacter = scenario.getPassengerCount()+scenario.getPedestrianCount();
+        int totalCharacter = scenario.getPassengerCount() + scenario.getPedestrianCount();
 
         ArrayList<ethicalengine.Character> pedestriansList = new ArrayList<>();
         ArrayList<ethicalengine.Character> passengersList = new ArrayList<>();
@@ -161,11 +166,11 @@ public class Audit {
     /**
      * this is a support function for recording statistic for each character's each characteristic
      *
-     * @author Fan Jia
-     * @methodName count
-     * @param List : pedestrian or passenger
+     * @param List      : pedestrian or passenger
      * @param isSurvive : if survive
      * @return void
+     * @author Fan Jia
+     * @methodName count
      */
     private void count(ArrayList<ethicalengine.Character> List, boolean isSurvive) {
         CharaStatistic animals = CharaStatistic.findCharacter("animal", charaStatistics);
@@ -184,9 +189,9 @@ public class Audit {
                         }
                     }
                 }
-                persons.setTotalCase(persons.getTotalCase()+1);
+                persons.setTotalCase(persons.getTotalCase() + 1);
                 if (isSurvive) {
-                    persons.setTotalSurvive(persons.getTotalSurvive()+1);
+                    persons.setTotalSurvive(persons.getTotalSurvive() + 1);
                     surviveTotalAge += character1.getAge();
                     personSurvivor++;
                 }
@@ -200,9 +205,9 @@ public class Audit {
                         }
                     }
                 }
-                animals.setTotalCase(animals.getTotalCase()+1);
+                animals.setTotalCase(animals.getTotalCase() + 1);
                 if (isSurvive) {
-                    animals.setTotalSurvive(animals.getTotalSurvive()+1);
+                    animals.setTotalSurvive(animals.getTotalSurvive() + 1);
                 }
             }
         }
@@ -213,9 +218,9 @@ public class Audit {
      * due to characteristic may changed (add or delete), each audit should call
      * this function to acquire current characteristic
      *
+     * @return java.util.ArrayList<ethicalengine.CharaStatistic>
      * @author Fan Jia
      * @methodName allCCharacteristic
-     * @return java.util.ArrayList<ethicalengine.ethicalengine.CharaStatistic>
      */
     private ArrayList<CharaStatistic> allCCharacteristic() {
         ArrayList<CharaStatistic> characteristics = new ArrayList<>();
@@ -237,7 +242,7 @@ public class Audit {
         }
         Person.Profession[] professions = Person.Profession.values();                                     //profession
         for (Person.Profession profession : professions) {
-            if ( !profession.equals(Person.Profession.NONE))
+            if (!profession.equals(Person.Profession.NONE))
                 characteristics.add(new CharaStatistic(profession.toString().toLowerCase()));
         }
         characteristics.add(new CharaStatistic("pregnant"));                              //pregnant
@@ -267,9 +272,9 @@ public class Audit {
     /**
      * format output
      *
+     * @return java.lang.String
      * @author Fan Jia
      * @methodName toString
-     * @return java.lang.String
      */
     @Override
     public String toString() {
@@ -277,8 +282,8 @@ public class Audit {
             return "no audit available";
         }
         charaStatistics.sort((o1, o2) -> {
-            float o1Ratio =Float.parseFloat(o1.ratio());
-            float o2Ratio =Float.parseFloat(o2.ratio());
+            float o1Ratio = Float.parseFloat(o1.ratio());
+            float o2Ratio = Float.parseFloat(o2.ratio());
             if (o1Ratio > o2Ratio) {
                 return -1;
             } else if (o1Ratio < o2Ratio) {
@@ -303,16 +308,16 @@ public class Audit {
         }
         summary += "--" + "\n";
 
-        summary += "average age: " + df.format((double)surviveTotalAge / personSurvivor);
+        summary += "average age: " + df.format((double) surviveTotalAge / personSurvivor);
         return summary;
     }
 
     /**
      * command line output
      *
+     * @return void
      * @author Fan Jia
      * @methodName printStatistic
-     * @return void
      * @see #toString()
      */
     public void printStatistic() {
@@ -322,10 +327,10 @@ public class Audit {
     /**
      * print statistic to file
      *
-     * @author Fan Jia
-     * @methodName printToFile
      * @param filepath : path to save the log file
      * @return void
+     * @author Fan Jia
+     * @methodName printToFile
      */
     public void printToFile(String filepath) {
 
@@ -333,7 +338,7 @@ public class Audit {
             if (filepath != null) {
 
                 OutputStreamWriter writer = new OutputStreamWriter(
-                        new FileOutputStream(filepath,true),
+                        new FileOutputStream(filepath, true),
                         StandardCharsets.US_ASCII);
                 writer.write(toString());
                 writer.close();

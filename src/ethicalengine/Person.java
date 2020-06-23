@@ -30,6 +30,7 @@ public class Person extends Character {
         public double getCoefficient() {
             return coefficient;
         }
+
         public static Profession contains(String type) throws InvalidCharacteristicException {
             for (Profession profession : Profession.values()) {
                 if (profession.name().equals(type.toUpperCase())) {
@@ -57,7 +58,8 @@ public class Person extends Character {
         }
     }
 
-    public Person(Gender gender, BodyType bodyType, int age, boolean isPregnant, Profession profession) {
+    public Person(Gender gender, BodyType bodyType, int age, boolean isPregnant,
+                  Profession profession) {
         super(gender, bodyType, age);
         this.isPregnant = isPregnant;
         this.profession = profession;
@@ -113,9 +115,9 @@ public class Person extends Character {
      * Gain person's additional mark based on their profession,pregnancy state,
      * if this person is usr
      *
+     * @return double
      * @author Fan Jia
      * @methodName getMark
-     * @return double
      */
     @Override
     public double getMark() {
@@ -126,7 +128,7 @@ public class Person extends Character {
             mark += 5;
         }
         if (isYou) {
-            mark+= 1000000; //I WILL ALIVE!!!!
+            mark += 1000000; //I WILL ALIVE!!!!
         }
         return mark;
     }
@@ -139,14 +141,14 @@ public class Person extends Character {
         if (isYou()) {
             display = display + "you ";
         }
-        display+= getBodyType().toString().toLowerCase()+" ";                       //body type
-        display+= getAgeCategory().toString().toLowerCase() + " ";        //age category
+        display += getBodyType().toString().toLowerCase() + " ";                    //body type
+        display += getAgeCategory().toString().toLowerCase() + " ";                 //age category
         if (getAgeCategory().equals(AgeCategory.ADULT)) {
             display = display + getProfession().toString().toLowerCase() + " ";     //profession
         }
-        display = display + getGender().toString().toLowerCase();             //gender
+        display = display + getGender().toString().toLowerCase();                   //gender
         if (isPregnant()) {
-            display = display + " pregnant";                                         //pregnant
+            display = display + " pregnant";                                        //pregnant
         }
         return display;
     }

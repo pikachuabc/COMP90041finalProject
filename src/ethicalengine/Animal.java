@@ -9,7 +9,7 @@ public class Animal extends Character {
     private String species;
     private boolean isPet;
 
-    public static ArrayList<String> specie = new ArrayList<String>(){{
+    public static ArrayList<String> specie = new ArrayList<String>() {{
         add("TURTLE");
         add("BIRD");
         add("DOG");
@@ -50,17 +50,19 @@ public class Animal extends Character {
     }
 
     /**
-     * Gain additional mark for animal based on if it is a pet
+     * Gain additional mark for animal depending on if it is a pet
      *
+     * @return double
      * @author Fan Jia
      * @methodName getMark
-     * @return double
+     * @see Person#getMark()
+     * @see Character#getMark()
      */
     @Override
     public double getMark() {
         double mark = super.getMark();
         if (isPet) {
-            mark+=1;
+            mark += 1;
         }
         return mark;
     }

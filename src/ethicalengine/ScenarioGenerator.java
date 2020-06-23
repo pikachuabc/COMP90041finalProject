@@ -1,5 +1,4 @@
 package ethicalengine;
-
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -23,7 +22,8 @@ public class ScenarioGenerator {
         this.random = new Random(seed);
     }
 
-    public ScenarioGenerator(long seed, int passengerCountMinimum, int passengerCountMaximum, int pedestrianCountMinimum, int pedestrianCountMaximum) {
+    public ScenarioGenerator(long seed, int passengerCountMinimum, int passengerCountMaximum,
+                             int pedestrianCountMinimum, int pedestrianCountMaximum) {
         this.random = new Random(seed);
         this.passengerCountMinimum = passengerCountMinimum;
         this.passengerCountMaximum = passengerCountMaximum;
@@ -80,7 +80,14 @@ public class ScenarioGenerator {
         this.pedestrianCountMaximum = pedestrianCountMaximum;
     }
 
-
+    /**
+     * get a random person
+     *
+     * @return ethicalengine.Person
+     * @author Fan Jia
+     * @methodName getRandomPerson
+     * @see #generate()
+     */
     public Person getRandomPerson() {
         Character.Gender gender;
         boolean isPregnant;
@@ -109,6 +116,14 @@ public class ScenarioGenerator {
         return new Person(gender, bodyType, age, isPregnant, profession);
     }
 
+    /**
+     * get a random animal
+     *
+     * @return ethicalengine.Animal
+     * @author Fan Jia
+     * @methodName getRandomAnimal
+     * @see #generate()
+     */
     public Animal getRandomAnimal() {
         int age;
         Character.Gender gender;
@@ -134,9 +149,9 @@ public class ScenarioGenerator {
      * generate scenarios randomly based on {@code passengerCountMinimum,
      * passengerCountMaximum, pedestrianCountMinimum, pedestrianCountMaximum}
      *
+     * @return ethicalengine.Scenario
      * @author Fan Jia
      * @methodName generate
-     * @return ethicalengine.Scenario
      */
     public Scenario generate() {
 
@@ -163,7 +178,8 @@ public class ScenarioGenerator {
         }
         // Neither passenger nor pedestrian
 
-        return new Scenario(passengers.toArray(new Character[0]), pedestrians.toArray(new Character[0]), isLegal);
+        return new Scenario(passengers.toArray(new Character[0]),
+                pedestrians.toArray(new Character[0]), isLegal);
 
 
     }
@@ -171,15 +187,15 @@ public class ScenarioGenerator {
     /**
      * generate scenarios based on given index (from config file)
      *
-     * @author Fan Jia
-     * @methodName generate
-     * @param scenarioInfo : several rows representing for a scenario
-     * @param isLegal : if this scenario is legal
+     * @param scenarioInfo   : several rows representing for a scenario
+     * @param isLegal        : if this scenario is legal
      * @param baseLineNumber : track number from the config
      * @return ethicalengine.Scenario
-     *
+     * @author Fan Jia
+     * @methodName generate
      */
-    public Scenario generate(ArrayList<String[]> scenarioInfo, boolean isLegal, int baseLineNumber) {
+    public Scenario generate(ArrayList<String[]> scenarioInfo,
+                             boolean isLegal, int baseLineNumber) {
         ArrayList<Character> passenger = new ArrayList<>();
         ArrayList<Character> pedestrian = new ArrayList<>();
 
@@ -203,7 +219,7 @@ public class ScenarioGenerator {
 
                 try {
                     gender = Character.Gender.contains(strings[1]);
-                } catch ( InvalidCharacteristicException e) {
+                } catch (InvalidCharacteristicException e) {
                     System.out.println(e.getMessage() + baseLineNumber);
                     gender = Character.Gender.UNKNOWN;
                 }
@@ -276,14 +292,15 @@ public class ScenarioGenerator {
         return new Scenario(passengerArray, pedestrianArray, isLegal);
 
     }
+
     /**
      * support function, generate passenger and pedestrian list
      * for a random scenario
      *
-     * @author Fan Jia
-     * @methodName generateArrayList
      * @param range : upper bound of the group
      * @return java.util.ArrayList<ethicalengine.Character>
+     * @author Fan Jia
+     * @methodName generateArrayList
      * @see #generate()
      */
     private ArrayList<Character> generateArrayList(int range) {

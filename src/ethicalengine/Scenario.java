@@ -17,7 +17,8 @@ public class Scenario {
         this.isLegalCrossing = isLegalCrossing;
     }
 
-    public Scenario(Character[] passengersArray, Character[] pedestriansArray, boolean isLegalCrossing) {
+    public Scenario(Character[] passengersArray, Character[] pedestriansArray,
+                    boolean isLegalCrossing) {
         Collections.addAll(this.passengers, passengersArray);
         Collections.addAll(this.pedestrians, pedestriansArray);
         this.isLegalCrossing = isLegalCrossing;
@@ -59,9 +60,9 @@ public class Scenario {
     /**
      * If usr in the care
      *
+     * @return boolean
      * @author Fan Jia
      * @methodName hasYouInCar
-     * @return boolean
      */
     public boolean hasYouInCar() {
         for (Character passenger : passengers) {
@@ -77,9 +78,9 @@ public class Scenario {
     /**
      * If usr in the lane
      *
+     * @return boolean
      * @author Fan Jia
      * @methodName hasYouInLane
-     * @return boolean
      */
     public boolean hasYouInLane() {
         for (Character pedestrian : pedestrians) {
@@ -95,9 +96,9 @@ public class Scenario {
     /**
      * format display
      *
+     * @return java.lang.String
      * @author Fan Jia
      * @methodName toString
-     * @return java.lang.String
      */
     @Override
     public String toString() {

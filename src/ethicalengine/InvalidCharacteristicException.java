@@ -1,7 +1,7 @@
 package ethicalengine;
 
 /**
- * @description:
+ * @description: handle InvalidCharacteristicException
  * @author: Fan Jia
  */
 public class InvalidCharacteristicException extends Exception {

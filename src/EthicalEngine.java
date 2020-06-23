@@ -24,7 +24,7 @@ public class EthicalEngine {
 
     public enum Decision {
         PEDESTRIANS,
-        PASSENGERS;
+        PASSENGERS
     }
 
     public static void main(String[] args) throws IOException {
@@ -110,14 +110,13 @@ public class EthicalEngine {
             String line = reader.readLine();
 
 
-
             while (line != null) {
 
                 String[] info = line.split(",", -1);
                 if (info[0].contains("scenario:")) {
                     int baselineNumber = lineNumber;
                     lineNumber++;
-                    ArrayList<String[]> scenarioInfo = new ArrayList<>();        //each character's information in this scenario
+                    ArrayList<String[]> scenarioInfo = new ArrayList<>();
                     boolean isLegal = info[0].split(":")[1].contains("green");
 
                     while ((line = reader.readLine()) != null &&
@@ -146,6 +145,8 @@ public class EthicalEngine {
 
 
     /**
+     * enter interactive mode
+     *
      * @param configDate : decide if the program should generate scenarios for user
      * @return void
      * @throws IOException when something wrong while reading welcome file
@@ -218,9 +219,8 @@ public class EthicalEngine {
                 }
             }
 
-
-            if (configDate && audit.totalRuns==audit.scenarios.size()) {                   //when user want to continue and no scenarios from config
-                //audit.printStatistic();
+            //when user want to continue and no scenarios from config
+            if (configDate && audit.totalRuns == audit.scenarios.size()) {
                 if (collectDate) {
                     audit.printToFile(resultPath);
                 }
@@ -236,10 +236,10 @@ public class EthicalEngine {
     /**
      * help info
      *
-     * @author Fan Jia
-     * @methodName help
      * @param args :
      * @return void
+     * @author Fan Jia
+     * @methodName help
      */
     public void help(String[] args) {
         String help = "Usage: java EthicalEngine";
@@ -254,19 +254,20 @@ public class EthicalEngine {
         System.out.println(help);
         System.exit(0);
     }
+
     /**
      * let program decide which group to save depending on sum mark of each
      * group, for marking detail see {@link Character#getMark()}
      *
-     * @author Fan Jia
-     * @methodName decide
      * @param scenario : make decision for this scenario
      * @return EthicalEngine.Decision
+     * @author Fan Jia
+     * @methodName decide
      * @see Character#getMark()
      */
     public static Decision decide(Scenario scenario) {
-        double passengerMark=0;
-        double pedestrianMark=0;
+        double passengerMark = 0;
+        double pedestrianMark = 0;
         Character[] passengers = scenario.getPassengers();
         Character[] pedestrians = scenario.getPedestrians();
 
@@ -281,7 +282,7 @@ public class EthicalEngine {
         if (scenario.isLegalCrossing()) {
             pedestrianMark += 5;
         } else {
-            passengerMark+= 5;
+            passengerMark += 5;
         }
 
 

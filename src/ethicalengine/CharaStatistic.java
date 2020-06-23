@@ -8,11 +8,11 @@ import java.util.ArrayList;
  * @description:
  * @author: Fan Jia
  */
-public  class CharaStatistic {
+public class CharaStatistic {
 
     private String characteristicName;
-    private int totalCase=0;
-    private int totalSurvive=0;
+    private int totalCase = 0;
+    private int totalSurvive = 0;
 
     public CharaStatistic(String characteristicName) {
         this.characteristicName = characteristicName;
@@ -41,14 +41,15 @@ public  class CharaStatistic {
     public void setTotalSurvive(int totalSurvive) {
         this.totalSurvive = totalSurvive;
     }
+
     /**
      * support function for finding a specific characteristic in a list
      *
+     * @param name            : characteristic name in string
+     * @param charaStatistics : where to find that characteristic
+     * @return ethicalengine.CharaStatistic
      * @author Fan Jia
      * @methodName findCharacter
-     * @param name :
-     * @param charaStatistics :
-     * @return ethicalengine.ethicalengine.CharaStatistic
      */
     public static CharaStatistic findCharacter(String name,
                                                ArrayList<CharaStatistic> charaStatistics) {
@@ -63,10 +64,10 @@ public  class CharaStatistic {
     /**
      * record statistic under different situation
      *
-     * @author Fan Jia
-     * @methodName survive
      * @param isSurvive : if survive
      * @return void
+     * @author Fan Jia
+     * @methodName survive
      */
     public void survive(boolean isSurvive) {
         this.totalCase++;
@@ -82,12 +83,12 @@ public  class CharaStatistic {
         if (totalCase == 0) {
             return "0";
         }
-        return df.format((double)totalSurvive/totalCase);
+        return df.format((double) totalSurvive / totalCase);
     }
 
     @Override
     public String toString() {
 
-        return characteristicName.toLowerCase()+": "+ratio()+"\n";
+        return characteristicName.toLowerCase() + ": " + ratio() + "\n";
     }
 }

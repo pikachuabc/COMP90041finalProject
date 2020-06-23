@@ -8,13 +8,10 @@ import java.util.ArrayList;
  */
 public abstract class Character {
 
-
     private Gender gender;
     private BodyType bodyType;
     private int age;
-    public static final int DEFAULT_AGE=10;
-
-
+    public static final int DEFAULT_AGE = 10;
 
     public enum Gender {
         MALE(1),
@@ -56,6 +53,7 @@ public abstract class Character {
         public double getCoefficient() {
             return coefficient;
         }
+
         public static BodyType contains(String type) throws InvalidCharacteristicException {
             for (BodyType bodyType : BodyType.values()) {
                 if (bodyType.name().equals(type.toUpperCase())) {
@@ -73,7 +71,7 @@ public abstract class Character {
     }
 
     public Character(Character c) {
-        this.gender= c.getGender();
+        this.gender = c.getGender();
         this.age = c.getAge();
         this.bodyType = c.getBodyType();
     }
@@ -104,7 +102,7 @@ public abstract class Character {
         return age;
     }
 
-    public void setAge(int age){
+    public void setAge(int age) {
         if (age <= 0) {
             System.out.println("invalid age value, check it");
             return;
@@ -116,18 +114,16 @@ public abstract class Character {
      * each character has a basic mark depending on their body type and gender,
      * for specific categories, person and animal have their additional mark
      *
+     * @return double
      * @author Fan Jia
      * @methodName getMark
-     * @return double
      * @see Person#getMark()
      * @see Animal#getMark()
      */
     public double getMark() {
-        return  getGender().getCoefficient()+
+        return getGender().getCoefficient() +
                 getBodyType().getCoefficient();
     }
-
-
 
 
 }

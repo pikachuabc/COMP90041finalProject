@@ -1,7 +1,7 @@
 package ethicalengine;
 
 /**
- * @description:
+ * @description: handle InvalidDataFormatException
  * @author: Fan Jia
  */
 public class InvalidDataFormatException extends Exception{
