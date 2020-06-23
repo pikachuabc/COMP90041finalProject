@@ -47,9 +47,8 @@ public class CharaStatistic {
      *
      * @param name            : characteristic name in string
      * @param charaStatistics : where to find that characteristic
-     * @return ethicalengine.CharaStatistic
+     * @return CharaStatistic
      * @author Fan Jia
-     * @methodName findCharacter
      */
     public static CharaStatistic findCharacter(String name,
                                                ArrayList<CharaStatistic> charaStatistics) {
@@ -65,9 +64,7 @@ public class CharaStatistic {
      * record statistic under different situation
      *
      * @param isSurvive : if survive
-     * @return void
      * @author Fan Jia
-     * @methodName survive
      */
     public void survive(boolean isSurvive) {
         this.totalCase++;

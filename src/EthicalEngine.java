@@ -40,10 +40,8 @@ public class EthicalEngine {
      * Initiate whole process depending on user input parameters
      *
      * @param args : system input
-     * @return void
      * @throws IOException when something goes wrong while reading file
      * @author Fan Jia
-     * @methodName mainProcess
      */
     public void mainProcess(String[] args) throws IOException {
 
@@ -86,9 +84,7 @@ public class EthicalEngine {
     /**
      * Read scenarios data from .csv file and store in field {@link EthicalEngine#scenarios}
      *
-     * @return ethicalengine.Scenario[]
      * @author Fan Jia
-     * @methodName readConfig
      * @see ScenarioGenerator#generate(ArrayList, boolean, int)
      */
     public Scenario[] readConfig() {
@@ -148,10 +144,8 @@ public class EthicalEngine {
      * enter interactive mode
      *
      * @param configDate : decide if the program should generate scenarios for user
-     * @return void
      * @throws IOException when something wrong while reading welcome file
      * @author Fan Jia
-     * @methodName interActive
      */
     public void interActive(boolean configDate) throws IOException {
 
@@ -236,10 +230,8 @@ public class EthicalEngine {
     /**
      * help info
      *
-     * @param args :
-     * @return void
+     * @param args : system input
      * @author Fan Jia
-     * @methodName help
      */
     public void help(String[] args) {
         String help = "Usage: java EthicalEngine";
@@ -260,9 +252,8 @@ public class EthicalEngine {
      * group, for marking detail see {@link Character#getMark()}
      *
      * @param scenario : make decision for this scenario
-     * @return EthicalEngine.Decision
+     * @return Decision
      * @author Fan Jia
-     * @methodName decide
      * @see Character#getMark()
      */
     public static Decision decide(Scenario scenario) {

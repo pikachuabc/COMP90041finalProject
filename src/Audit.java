@@ -47,9 +47,7 @@ public class Audit {
      * use {@link #recordThisScenario(Scenario, EthicalEngine.Decision)}
      * to record statistic
      *
-     * @return void
      * @author Fan Jia
-     * @methodName run
      * @see #recordThisScenario(Scenario, EthicalEngine.Decision)
      */
     public void run() {
@@ -98,9 +96,7 @@ public class Audit {
      * generate {@code runs} random scenarios and run
      *
      * @param runs : this audit will run {@code runs} random scenarios
-     * @return void
      * @author Fan Jia
-     * @methodName run
      * @see Audit#run()
      * @see ScenarioGenerator#generate()
      */
@@ -119,9 +115,7 @@ public class Audit {
      *
      * @param scenario : scenario
      * @param decision : decision made by usr or program
-     * @return void
      * @author Fan Jia
-     * @methodName recordThisScenario
      */
     public void recordThisScenario(Scenario scenario, EthicalEngine.Decision decision) {
 
@@ -168,9 +162,7 @@ public class Audit {
      *
      * @param List      : pedestrian or passenger
      * @param isSurvive : if survive
-     * @return void
      * @author Fan Jia
-     * @methodName count
      */
     private void count(ArrayList<ethicalengine.Character> List, boolean isSurvive) {
         CharaStatistic animals = CharaStatistic.findCharacter("animal", charaStatistics);
@@ -217,10 +209,8 @@ public class Audit {
      * this is a support function for generating all characteristic in one audit.
      * due to characteristic may changed (add or delete), each audit should call
      * this function to acquire current characteristic
-     *
-     * @return java.util.ArrayList<ethicalengine.CharaStatistic>
+     * @return ArrayList<CharaStatistic>
      * @author Fan Jia
-     * @methodName allCCharacteristic
      */
     private ArrayList<CharaStatistic> allCCharacteristic() {
         ArrayList<CharaStatistic> characteristics = new ArrayList<>();
@@ -272,9 +262,7 @@ public class Audit {
     /**
      * format output
      *
-     * @return java.lang.String
      * @author Fan Jia
-     * @methodName toString
      */
     @Override
     public String toString() {
@@ -315,9 +303,7 @@ public class Audit {
     /**
      * command line output
      *
-     * @return void
      * @author Fan Jia
-     * @methodName printStatistic
      * @see #toString()
      */
     public void printStatistic() {
@@ -328,9 +314,7 @@ public class Audit {
      * print statistic to file
      *
      * @param filepath : path to save the log file
-     * @return void
      * @author Fan Jia
-     * @methodName printToFile
      */
     public void printToFile(String filepath) {
 

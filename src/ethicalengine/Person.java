@@ -115,9 +115,8 @@ public class Person extends Character {
      * Gain person's additional mark based on their profession,pregnancy state,
      * if this person is usr
      *
-     * @return double
      * @author Fan Jia
-     * @methodName getMark
+     * @see Character#getMark()
      */
     @Override
     public double getMark() {

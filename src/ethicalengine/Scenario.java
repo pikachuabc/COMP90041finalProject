@@ -62,7 +62,6 @@ public class Scenario {
      *
      * @return boolean
      * @author Fan Jia
-     * @methodName hasYouInCar
      */
     public boolean hasYouInCar() {
         for (Character passenger : passengers) {
@@ -78,9 +77,8 @@ public class Scenario {
     /**
      * If usr in the lane
      *
-     * @return boolean
      * @author Fan Jia
-     * @methodName hasYouInLane
+     * @return boolean
      */
     public boolean hasYouInLane() {
         for (Character pedestrian : pedestrians) {
@@ -96,9 +94,7 @@ public class Scenario {
     /**
      * format display
      *
-     * @return java.lang.String
      * @author Fan Jia
-     * @methodName toString
      */
     @Override
     public String toString() {

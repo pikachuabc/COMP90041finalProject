@@ -83,9 +83,8 @@ public class ScenarioGenerator {
     /**
      * get a random person
      *
-     * @return ethicalengine.Person
+     * @return Person
      * @author Fan Jia
-     * @methodName getRandomPerson
      * @see #generate()
      */
     public Person getRandomPerson() {
@@ -119,9 +118,8 @@ public class ScenarioGenerator {
     /**
      * get a random animal
      *
-     * @return ethicalengine.Animal
+     * @return Animal
      * @author Fan Jia
-     * @methodName getRandomAnimal
      * @see #generate()
      */
     public Animal getRandomAnimal() {
@@ -149,9 +147,8 @@ public class ScenarioGenerator {
      * generate scenarios randomly based on {@code passengerCountMinimum,
      * passengerCountMaximum, pedestrianCountMinimum, pedestrianCountMaximum}
      *
-     * @return ethicalengine.Scenario
+     * @return Scenario
      * @author Fan Jia
-     * @methodName generate
      */
     public Scenario generate() {
 
@@ -190,9 +187,8 @@ public class ScenarioGenerator {
      * @param scenarioInfo   : several rows representing for a scenario
      * @param isLegal        : if this scenario is legal
      * @param baseLineNumber : track number from the config
-     * @return ethicalengine.Scenario
+     * @return Scenario
      * @author Fan Jia
-     * @methodName generate
      */
     public Scenario generate(ArrayList<String[]> scenarioInfo,
                              boolean isLegal, int baseLineNumber) {
@@ -298,9 +294,8 @@ public class ScenarioGenerator {
      * for a random scenario
      *
      * @param range : upper bound of the group
-     * @return java.util.ArrayList<ethicalengine.Character>
+     * @return ArrayList<Character>
      * @author Fan Jia
-     * @methodName generateArrayList
      * @see #generate()
      */
     private ArrayList<Character> generateArrayList(int range) {

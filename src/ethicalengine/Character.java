@@ -114,9 +114,7 @@ public abstract class Character {
      * each character has a basic mark depending on their body type and gender,
      * for specific categories, person and animal have their additional mark
      *
-     * @return double
      * @author Fan Jia
-     * @methodName getMark
      * @see Person#getMark()
      * @see Animal#getMark()
      */

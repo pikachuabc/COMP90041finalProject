@@ -52,9 +52,7 @@ public class Animal extends Character {
     /**
      * Gain additional mark for animal depending on if it is a pet
      *
-     * @return double
      * @author Fan Jia
-     * @methodName getMark
      * @see Person#getMark()
      * @see Character#getMark()
      */
