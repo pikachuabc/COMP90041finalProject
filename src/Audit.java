@@ -235,7 +235,7 @@ public class Audit {
         for (String specie : species) {
             characteristics.add(new CharaStatistic(specie.toLowerCase()));
         }
-        characteristics.add(new CharaStatistic("pets"));     //isPet
+        characteristics.add(new CharaStatistic("pet"));     //isPet
 
         //for scenario
         characteristics.add(new CharaStatistic("person"));   //class type
